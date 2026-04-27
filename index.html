@@ -2,1445 +2,1251 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Umrah Guide">
-<meta name="theme-color" content="#1B4332">
-<link rel="manifest" href="manifest.json">
-<title>دليل العمرة الشامل | Complete Umrah Guide</title>
-<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Scheherazade+New:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#091A10" id="metaThemeColor">
+<title>دليل الحج الشامل</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&family=Noto+Naskh+Arabic:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --gold: #C9A84C;
-    --gold-light: #E8D48B;
-    --gold-dark: #8B6914;
-    --green-deep: #1B4332;
-    --green-mid: #2D6A4F;
-    --green-light: #52B788;
-    --cream: #FDF8ED;
-    --cream-dark: #F5ECD7;
-    --text-primary: #2C1810;
-    --text-secondary: #5C4033;
-    --white: #FFFFFF;
-    --shadow: 0 4px 24px rgba(27,67,50,0.12);
-    --en-font: 'Outfit', sans-serif;
-    --ar-font: 'Noto Naskh Arabic', 'Amiri', serif;
-    --dua-font: 'Scheherazade New', serif;
-  }
-
-  * { margin:0; padding:0; box-sizing:border-box; }
-
-  body { font-family: var(--ar-font); background: var(--cream); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; -webkit-tap-highlight-color: transparent; transition: background-color 0.3s; }
-
-  body::before { content: ''; position: fixed; inset: 0; opacity: 0.03; background-image: repeating-conic-gradient(var(--green-deep) 0% 25%, transparent 0% 50%) 0 0 / 40px 40px, repeating-conic-gradient(var(--gold) 0% 25%, transparent 0% 50%) 20px 20px / 40px 40px; pointer-events: none; z-index: 0; }
-
-  .container { max-width: 820px; margin: 0 auto; padding: 20px 16px 60px; position: relative; z-index: 1; }
-
-  /* === RESTORE BANNER === */
-  .restore-banner {
-    display: none;
-    background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
-    border-radius: 16px;
-    padding: 20px 24px;
-    margin-bottom: 20px;
-    box-shadow: var(--shadow);
-    text-align: center;
-    animation: fadeUp 0.5s ease;
-  }
-
-  .restore-banner.show { display: block; }
-
-  .restore-banner h3 { font-family: var(--dua-font); color: var(--gold); font-size: 1.3rem; margin-bottom: 4px; }
-  .restore-banner .restore-en { font-family: var(--en-font); color: var(--gold-light); font-size: 0.85rem; direction: ltr; }
-  .restore-banner .restore-info { font-family: var(--en-font); color: rgba(255,255,255,0.6); font-size: 0.75rem; direction: ltr; margin: 8px 0 14px; }
-
-  .restore-btns { display: flex; gap: 10px; justify-content: center; }
-
-  .restore-btn {
-    padding: 10px 24px;
-    border-radius: 10px;
-    border: none;
-    font-family: var(--en-font);
-    font-size: 0.85rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s;
-  }
-
-  .restore-btn.primary { background: var(--gold); color: var(--green-deep); }
-  .restore-btn.secondary { background: rgba(255,255,255,0.1); color: var(--white); border: 1px solid rgba(255,255,255,0.2); }
-  .restore-btn:hover { transform: translateY(-1px); }
-
-  /* === OFFLINE INDICATOR === */
-  .offline-bar {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 300;
-    background: #E74C3C;
-    color: white;
-    text-align: center;
-    padding: 6px;
-    font-family: var(--en-font);
-    font-size: 0.75rem;
-    font-weight: 600;
-  }
-
-  .offline-bar.show { display: block; }
-
-  .online-restored {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 300;
-    background: var(--green-mid);
-    color: white;
-    text-align: center;
-    padding: 6px;
-    font-family: var(--en-font);
-    font-size: 0.75rem;
-    font-weight: 600;
-    animation: fadeDown 0.3s ease;
-  }
-
-  /* === PWA INSTALL PROMPT === */
-  .install-prompt {
-    display: none;
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 250;
-    background: var(--white);
-    border-radius: 14px;
-    padding: 16px 20px;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.15);
-    border: 1px solid rgba(201,168,76,0.2);
-    align-items: center;
-    gap: 12px;
-    max-width: 360px;
-    width: 90%;
-    animation: fadeUp 0.5s ease;
-  }
-
-  .install-prompt.show { display: flex; }
-  .install-prompt .install-icon { font-size: 1.5rem; }
-  .install-prompt .install-text { flex: 1; }
-  .install-prompt .install-title { font-family: var(--en-font); font-size: 0.85rem; font-weight: 700; color: var(--green-deep); }
-  .install-prompt .install-desc { font-family: var(--en-font); font-size: 0.7rem; color: var(--text-secondary); }
-
-  .install-btn {
-    padding: 8px 16px;
-    background: var(--green-deep);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-family: var(--en-font);
-    font-size: 0.75rem;
-    font-weight: 700;
-    cursor: pointer;
-  }
-
-  .install-dismiss {
-    position: absolute;
-    top: 6px;
-    right: 8px;
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    font-size: 1rem;
-    cursor: pointer;
-  }
-
-  /* === CLOUD SYNC STATUS === */
-  .sync-status {
-    display: none;
-    position: fixed;
-    top: 60px;
-    right: 14px;
-    z-index: 200;
-    background: var(--white);
-    border-radius: 8px;
-    padding: 6px 12px;
-    box-shadow: var(--shadow);
-    font-family: var(--en-font);
-    font-size: 0.65rem;
-    font-weight: 600;
-    direction: ltr;
-    animation: fadeDown 0.3s ease;
-  }
-
-  .sync-status.syncing { display: block; color: #3498DB; }
-  .sync-status.synced { display: block; color: var(--green-mid); }
-  .sync-status.error { display: block; color: #E74C3C; }
-
-  /* === LANG TOGGLE === */
-  .lang-toggle { position: fixed; top: 14px; left: 14px; z-index: 200; display: flex; background: var(--white); border-radius: 10px; box-shadow: var(--shadow); border: 1px solid rgba(201,168,76,0.2); overflow: hidden; }
-  .lang-btn { padding: 8px 14px; border: none; background: transparent; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.3s; color: var(--text-secondary); }
-  .lang-btn.active { background: var(--green-deep); color: var(--white); }
-
-  /* === LIVE CLOCK === */
-  .live-clock-bar { position: fixed; top: 14px; right: 14px; z-index: 200; background: var(--white); border-radius: 10px; box-shadow: var(--shadow); border: 1px solid rgba(201,168,76,0.2); padding: 8px 14px; font-family: var(--en-font); font-size: 0.78rem; font-weight: 600; color: var(--green-deep); direction: ltr; text-align: center; min-width: 100px; }
-  .live-clock-bar .clock-time { font-size: 1rem; font-weight: 700; }
-  .live-clock-bar .clock-date { font-size: 0.65rem; color: var(--text-secondary); margin-top: 1px; }
-
-  /* === HEADER === */
-  .header { text-align: center; padding: 55px 20px 30px; margin-bottom: 30px; }
-  .header::before { content: '﷽'; display: block; font-family: var(--dua-font); font-size: 2rem; color: var(--gold); margin-bottom: 20px; opacity: 0; animation: fadeDown 0.8s ease forwards; }
-  .header-ornament { width: 120px; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin: 0 auto 16px; }
-  .header h1 { font-family: var(--dua-font); font-size: 2.6rem; font-weight: 700; color: var(--green-deep); line-height: 1.4; opacity: 0; animation: fadeDown 0.8s 0.2s ease forwards; }
-  .header .subtitle { font-size: 1.05rem; color: var(--text-secondary); margin-top: 6px; opacity:0; animation: fadeDown 0.8s 0.35s ease forwards; }
-  .header .subtitle-en { font-family: var(--en-font); font-size: 0.95rem; color: var(--text-secondary); margin-top: 4px; direction: ltr; opacity:0; animation: fadeDown 0.8s 0.45s ease forwards; }
-  .header .mosque-icon { font-size: 3rem; margin-top: 16px; opacity:0; animation: fadeDown 0.8s 0.55s ease forwards; }
-
-  /* === ONBOARDING MODAL === */
-  .onboard-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(10,14,26,0.7);
-    backdrop-filter: blur(8px);
-    z-index: 500;
-    align-items: center;
-    justify-content: center;
-  }
-  .onboard-overlay.show { display: flex; }
-
-  .onboard-card {
-    background: var(--white);
-    border-radius: 24px;
-    padding: 36px 28px;
-    max-width: 380px;
-    width: 90%;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-    text-align: center;
-    animation: fadeUp 0.5s ease;
-  }
-
-  .onboard-card .ob-icon { font-size: 3rem; margin-bottom: 12px; }
-  .onboard-card h2 { font-family: var(--dua-font); font-size: 1.6rem; color: var(--green-deep); margin-bottom: 4px; }
-  .onboard-card .ob-sub { font-family: var(--en-font); font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 20px; }
-
-  .ob-field { margin-bottom: 18px; text-align: right; }
-  .ob-field label { display: block; font-size: 0.85rem; font-weight: 700; color: var(--green-deep); margin-bottom: 6px; }
-  .ob-field .ob-label-en { font-family: var(--en-font); font-size: 0.7rem; color: var(--text-secondary); direction: ltr; text-align: left; }
-
-  .ob-input {
-    width: 100%;
-    padding: 12px 16px;
-    border: 2px solid var(--cream-dark);
-    border-radius: 12px;
-    font-family: var(--ar-font);
-    font-size: 1rem;
-    color: var(--text-primary);
-    background: var(--cream);
-    outline: none;
-    transition: border-color 0.3s;
-  }
-  .ob-input:focus { border-color: var(--gold); }
-
-  .ob-gender-options {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-  }
-
-  .ob-gender-btn {
-    flex: 1;
-    padding: 14px 12px;
-    border: 2px solid var(--cream-dark);
-    border-radius: 14px;
-    background: var(--cream);
-    cursor: pointer;
-    transition: all 0.3s;
-    text-align: center;
-  }
-
-  .ob-gender-btn:hover { border-color: var(--gold); }
-  .ob-gender-btn.selected { border-color: var(--green-deep); background: rgba(27,67,50,0.08); }
-  .ob-gender-btn .ob-g-icon { font-size: 1.8rem; display: block; margin-bottom: 6px; }
-  .ob-gender-btn .ob-g-label { font-size: 0.85rem; font-weight: 700; color: var(--green-deep); }
-  .ob-gender-btn .ob-g-label-en { font-family: var(--en-font); font-size: 0.7rem; color: var(--text-secondary); }
-
-  .ob-start-btn {
-    width: 100%;
-    padding: 14px;
-    border: none;
-    border-radius: 14px;
-    background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
-    color: var(--white);
-    font-family: var(--ar-font);
-    font-size: 1.1rem;
-    font-weight: 700;
-    cursor: pointer;
-    margin-top: 8px;
-    transition: all 0.3s;
-  }
-  .ob-start-btn:hover { transform: translateY(-2px); }
-  .ob-start-btn:disabled { opacity: 0.5; pointer-events: none; }
-
-  /* === USER BADGE === */
-  .user-badge {
-    display: none;
-    text-align: center;
-    margin-bottom: 16px;
-  }
-  .user-badge.show { display: block; }
-  .user-badge-inner {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--white);
-    border: 1px solid rgba(201,168,76,0.2);
-    border-radius: 20px;
-    padding: 8px 18px;
-    box-shadow: var(--shadow);
-    font-family: var(--en-font);
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--green-deep);
-  }
-  .user-badge-inner .ub-icon { font-size: 1.1rem; }
-
-  /* === GENDER-SPECIFIC CONTENT === */
-  .gender-male { display: none; }
-  .gender-female { display: none; }
-  body.user-male .gender-male { display: block; }
-  body.user-male .gender-female { display: none !important; }
-  body.user-female .gender-female { display: block; }
-  body.user-female .gender-male { display: none !important; }
-  body:not(.user-male):not(.user-female) .gender-male,
-  body:not(.user-male):not(.user-female) .gender-female { display: block; }
-
-  .gender-tag {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 6px;
-    font-family: var(--en-font);
-    font-size: 0.6rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    margin-right: 6px;
-    vertical-align: middle;
-  }
-  .gender-tag.men-only { background: #DBEAFE; color: #1E40AF; }
-  .gender-tag.women-only { background: #FCE7F3; color: #9D174D; }
-
-  /* === START BUTTON === */
-  .start-umrah-wrap { text-align: center; margin-bottom: 24px; }
-  .start-umrah-btn { display: inline-flex; align-items: center; gap: 10px; padding: 16px 36px; border: none; border-radius: 14px; background: linear-gradient(135deg, var(--green-deep), var(--green-mid)); color: var(--white); font-family: var(--ar-font); font-size: 1.15rem; font-weight: 700; cursor: pointer; box-shadow: var(--shadow); transition: all 0.3s; }
-  .start-umrah-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(27,67,50,0.2); }
-  .start-umrah-btn.started { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); pointer-events: none; }
-
-  /* === TIMER === */
-  .umrah-timer { text-align: center; margin-bottom: 24px; display: none; }
-  .umrah-timer.active { display: block; }
-  .timer-card { display: inline-flex; flex-direction: column; align-items: center; background: var(--white); border-radius: 14px; padding: 16px 28px; box-shadow: var(--shadow); border: 1px solid rgba(201,168,76,0.15); }
-  .timer-label { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 4px; }
-  .timer-label-en { font-family: var(--en-font); font-size: 0.7rem; color: var(--text-secondary); direction: ltr; }
-  .timer-started { font-family: var(--en-font); font-size: 0.75rem; color: var(--gold-dark); margin-top: 2px; direction: ltr; }
-  .timer-elapsed { font-family: var(--en-font); font-size: 2rem; font-weight: 700; color: var(--green-deep); direction: ltr; letter-spacing: 2px; margin-top: 4px; }
-
-  .timer-paused-label { display: none; font-family: var(--en-font); font-size: 0.75rem; color: #E74C3C; font-weight: 700; margin-top: 4px; animation: blink 1s infinite; }
-  .timer-paused-label.show { display: block; }
-  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
-
-  .pause-btn {
-    margin-top: 10px;
-    padding: 8px 24px;
-    border: 2px solid var(--green-mid);
-    border-radius: 10px;
-    background: transparent;
-    color: var(--green-deep);
-    font-family: var(--en-font);
-    font-size: 0.8rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s;
-  }
-  .pause-btn:hover { background: var(--cream-dark); }
-  .pause-btn.paused { border-color: var(--green-deep); background: var(--green-deep); color: var(--white); }
-
-  /* === PROGRESS === */
-  .progress-wrap { background: var(--white); border-radius: 16px; padding: 20px 24px; margin-bottom: 28px; box-shadow: var(--shadow); border: 1px solid rgba(201,168,76,0.15); position: sticky; top: 8px; z-index: 100; }
-  .progress-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.85rem; font-weight: 600; color: var(--green-deep); }
-  .progress-label-en { font-family: var(--en-font); font-size: 0.75rem; color: var(--green-mid); direction: ltr; }
-  .progress-bar-bg { height: 8px; background: var(--cream-dark); border-radius: 4px; overflow: hidden; }
-  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--green-deep), var(--green-light)); border-radius: 4px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); width: 0%; }
-  .progress-steps { display: flex; justify-content: space-between; margin-top: 10px; }
-  .progress-dot { width: 24px; height: 24px; border-radius: 50%; background: var(--cream-dark); border: 2px solid var(--cream-dark); display: flex; align-items: center; justify-content: center; font-size: 0.6rem; color: var(--text-secondary); transition: all 0.4s ease; cursor: pointer; font-family: var(--en-font); }
-  .progress-dot.completed { background: var(--gold); border-color: var(--gold); color: var(--white); }
-
-  /* === STEP CARD === */
-  .step-card { background: var(--white); border-radius: 20px; margin-bottom: 20px; box-shadow: var(--shadow); border: 1px solid rgba(201,168,76,0.1); overflow: hidden; opacity:0; transform: translateY(20px); transition: all 0.3s ease; }
-  .step-card.visible { opacity: 1; transform: translateY(0); }
-  .step-header { background: linear-gradient(135deg, var(--green-deep), var(--green-mid)); padding: 20px 24px; display: flex; align-items: center; gap: 16px; cursor: pointer; user-select: none; transition: filter 0.3s; }
-  .step-header:hover { filter: brightness(1.1); }
-  .step-number { width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.15); border: 2px solid var(--gold); display: flex; align-items: center; justify-content: center; font-family: var(--en-font); font-size: 1.2rem; font-weight: 700; color: var(--gold); flex-shrink: 0; }
-  .step-title-wrap { flex: 1; }
-  .step-title { font-family: var(--dua-font); font-size: 1.45rem; font-weight: 700; color: var(--white); line-height: 1.3; }
-  .step-title-en { font-family: var(--en-font); font-size: 0.85rem; font-weight: 500; color: var(--gold-light); direction: ltr; text-align: left; margin-top: 2px; }
-  .step-subtitle { font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 4px; }
-  .step-subtitle-en { font-family: var(--en-font); font-size: 0.72rem; color: rgba(255,255,255,0.45); direction: ltr; text-align: left; }
-  .step-toggle { color: var(--gold); font-size: 1.4rem; transition: transform 0.3s; flex-shrink: 0; }
-  .step-card.open .step-toggle { transform: rotate(180deg); }
-  .step-body { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1); }
-  .step-card.open .step-body { max-height: 15000px; }
-  .step-content { padding: 24px; }
-
-  .section-block { margin-bottom: 20px; }
-  .section-title { font-family: var(--dua-font); font-size: 1.15rem; font-weight: 700; color: var(--green-deep); margin-bottom: 4px; padding-bottom: 6px; border-bottom: 2px solid var(--gold-light); display: flex; align-items: center; gap: 8px; }
-  .section-title-en { font-family: var(--en-font); font-size: 0.8rem; font-weight: 600; color: var(--green-mid); direction: ltr; text-align: left; margin-bottom: 10px; }
-  .text-block { font-size: 1.02rem; line-height: 2; color: var(--text-primary); margin-bottom: 6px; }
-  .text-block-en { font-family: var(--en-font); font-size: 0.88rem; line-height: 1.7; color: var(--text-secondary); direction: ltr; text-align: left; margin-bottom: 10px; padding-left: 12px; border-left: 2px solid var(--cream-dark); }
-
-  .dua-box { background: linear-gradient(135deg, #FFF9E6, #FDF3D0); border: 1px solid var(--gold-light); border-right: 4px solid var(--gold); border-radius: 12px; padding: 18px 20px; margin: 12px 0; }
-  .dua-label { font-size: 0.78rem; font-weight: 700; color: var(--gold-dark); letter-spacing: 0.5px; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
-  .dua-label-en { font-family: var(--en-font); font-size: 0.7rem; font-weight: 600; color: var(--gold-dark); direction: ltr; text-align: left; opacity: 0.7; margin-bottom: 8px; }
-  .dua-arabic { font-family: var(--dua-font); font-size: 1.5rem; line-height: 2.4; color: var(--green-deep); text-align: center; margin: 8px 0; direction: rtl; }
-  .dua-translation { font-size: 0.85rem; color: var(--text-secondary); text-align: center; font-style: italic; line-height: 1.9; }
-  .dua-translation-en { font-family: var(--en-font); font-size: 0.78rem; color: var(--text-secondary); text-align: center; direction: ltr; line-height: 1.6; opacity: 0.8; margin-top: 4px; }
-  .dua-separator { width: 40%; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-light), transparent); margin: 10px auto; }
-
-  .quran-box { background: linear-gradient(135deg, #F5F0FF, #EDE6FF); border: 1px solid #C4B5FD; border-right: 4px solid #7C3AED; border-radius: 12px; padding: 18px 20px; margin: 12px 0; }
-  .quran-box .dua-label { color: #7C3AED; }
-  .quran-box .dua-label-en { color: #7C3AED; }
-  .quran-box .dua-arabic { color: #4C1D95; }
-
-  .note-box { background: #F0FAF4; border: 1px solid var(--green-light); border-right: 4px solid var(--green-mid); border-radius: 12px; padding: 14px 18px; margin: 12px 0; font-size: 0.93rem; line-height: 1.9; color: var(--green-deep); }
-  .note-en { font-family: var(--en-font); font-size: 0.8rem; color: var(--green-mid); direction: ltr; text-align: left; margin-top: 6px; line-height: 1.5; opacity: 0.85; }
-  .warn-box { background: #FFF5F5; border: 1px solid #FCA5A5; border-right: 4px solid #DC2626; border-radius: 12px; padding: 14px 18px; margin: 12px 0; font-size: 0.93rem; line-height: 1.9; color: #991B1B; }
-  .warn-en { font-family: var(--en-font); font-size: 0.8rem; color: #B91C1C; direction: ltr; text-align: left; margin-top: 6px; line-height: 1.5; opacity: 0.85; }
-
-  .check-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--cream-dark); cursor: pointer; }
-  .check-item:last-child { border-bottom: none; }
-  .check-box { width: 24px; height: 24px; border-radius: 6px; border: 2px solid var(--green-mid); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.3s; margin-top: 4px; }
-  .check-item.checked .check-box { background: var(--green-deep); border-color: var(--green-deep); }
-  .check-item.checked .check-box::after { content: '✓'; color: white; font-size: 0.8rem; font-weight: bold; }
-  .check-item.checked .check-text { text-decoration: line-through; opacity: 0.6; }
-  .check-text { font-size: 0.95rem; line-height: 1.8; transition: all 0.3s; }
-  .check-text-en { font-family: var(--en-font); font-size: 0.78rem; color: var(--text-secondary); direction: ltr; text-align: left; display: block; margin-top: 2px; }
-
-  .timestamp-badge { display: none; font-family: var(--en-font); font-size: 0.65rem; color: var(--green-mid); background: var(--cream-dark); padding: 2px 8px; border-radius: 6px; margin-top: 4px; direction: ltr; text-align: left; white-space: nowrap; }
-  .timestamp-badge.visible { display: inline-block; }
-
-  .counter-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 24px; background: linear-gradient(135deg, var(--green-deep), var(--green-mid)); border-radius: 16px; margin: 16px 0; }
-  .counter-title { font-family: var(--dua-font); font-size: 1.2rem; color: var(--gold-light); }
-  .counter-title-en { font-family: var(--en-font); font-size: 0.8rem; color: rgba(255,255,255,0.5); direction: ltr; }
-  .counter-display { font-family: var(--en-font); font-size: 3.5rem; font-weight: 700; color: var(--white); width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,0.1); border: 3px solid var(--gold); display: flex; align-items: center; justify-content: center; }
-  .counter-label { color: var(--gold-light); font-size: 0.95rem; }
-  .counter-buttons { display: flex; gap: 16px; }
-  .counter-btn { width: 52px; height: 52px; border-radius: 50%; border: 2px solid var(--gold); background: rgba(255,255,255,0.1); color: var(--white); font-size: 1.6rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
-  .counter-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.1); }
-  .counter-btn:active { transform: scale(0.95); }
-  .counter-btn.reset { width: auto; border-radius: 25px; padding: 0 20px; font-size: 0.85rem; font-family: var(--en-font); }
-  .counter-rounds { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
-  .round-dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--gold); background: transparent; transition: all 0.3s; }
-  .round-dot.filled { background: var(--gold); box-shadow: 0 0 8px rgba(201,168,76,0.5); }
-
-  .round-log { width: 100%; margin-top: 12px; }
-  .round-log-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 12px; font-family: var(--en-font); font-size: 0.72rem; color: rgba(255,255,255,0.7); border-bottom: 1px solid rgba(255,255,255,0.08); direction: ltr; }
-  .round-log-item:last-child { border-bottom: none; }
-  .round-log-item .rnd-num { font-weight: 700; color: var(--gold-light); }
-  .round-log-item .rnd-time { opacity: 0.8; }
-  .round-log-item .rnd-dur { color: var(--gold-light); font-weight: 600; }
-
-  .complete-btn { width: 100%; padding: 14px; margin-top: 16px; border: 2px solid var(--green-mid); background: transparent; color: var(--green-deep); border-radius: 12px; font-family: var(--ar-font); font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
-  .complete-btn:hover { background: var(--cream-dark); }
-  .complete-btn.done { background: var(--gold); border-color: var(--gold); color: var(--white); }
-
-  .activity-log-section { background: var(--white); border-radius: 20px; margin-top: 24px; box-shadow: var(--shadow); border: 1px solid rgba(201,168,76,0.1); overflow: hidden; }
-  .activity-log-header { background: linear-gradient(135deg, #1a1a2e, #16213e); padding: 20px 24px; cursor: pointer; display: flex; align-items: center; gap: 12px; }
-  .activity-log-header h3 { font-family: var(--dua-font); font-size: 1.2rem; color: var(--gold); flex: 1; }
-  .activity-log-header .log-count { font-family: var(--en-font); font-size: 0.75rem; color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 10px; }
-  .activity-log-body { max-height: 0; overflow: hidden; transition: max-height 0.4s; }
-  .activity-log-section.open .activity-log-body { max-height: 5000px; }
-  .log-table { width: 100%; border-collapse: collapse; }
-  .log-table th { font-family: var(--en-font); font-size: 0.7rem; font-weight: 700; color: var(--green-deep); text-align: left; padding: 10px 14px; background: var(--cream-dark); border-bottom: 2px solid var(--gold-light); direction: ltr; }
-  .log-table td { font-family: var(--en-font); font-size: 0.75rem; padding: 8px 14px; border-bottom: 1px solid var(--cream-dark); color: var(--text-primary); direction: ltr; text-align: left; }
-  .log-table tr:last-child td { border-bottom: none; }
-  .log-tag { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 600; font-family: var(--en-font); }
-  .log-tag.start { background: #DBEAFE; color: #1E40AF; }
-  .log-tag.step { background: #D1FAE5; color: #065F46; }
-  .log-tag.round { background: #FEF3C7; color: #92400E; }
-  .log-tag.check { background: #EDE9FE; color: #5B21B6; }
-  .log-tag.complete { background: #FCE7F3; color: #9D174D; }
-
-  .export-buttons { display: flex; gap: 10px; margin: 16px; flex-wrap: wrap; }
-  .export-btn { padding: 10px 20px; border: 2px solid var(--green-mid); background: transparent; color: var(--green-deep); border-radius: 10px; font-family: var(--en-font); font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
-  .export-btn:hover { background: var(--green-deep); color: var(--white); }
-  .export-btn.cloud { border-color: #3498DB; color: #3498DB; }
-  .export-btn.cloud:hover { background: #3498DB; color: white; }
-  .export-btn.reset-btn { border-color: #E74C3C; color: #E74C3C; }
-  .export-btn.reset-btn:hover { background: #E74C3C; color: white; }
-
-  .completed-banner { display: none; text-align: center; padding: 40px 24px; background: linear-gradient(135deg, var(--green-deep), var(--green-mid)); border-radius: 20px; margin-top: 20px; box-shadow: var(--shadow); }
-  .completed-banner.show { display: block; animation: fadeUp 0.6s ease; }
-  .completed-banner .big-icon { font-size: 3rem; margin-bottom: 16px; }
-  .completed-banner h2 { font-family: var(--dua-font); font-size: 1.8rem; color: var(--gold); margin-bottom: 4px; }
-  .completed-banner .en-title { font-family: var(--en-font); font-size: 1rem; color: var(--gold-light); direction: ltr; margin-bottom: 12px; }
-  .completed-banner p { color: var(--cream); font-size: 1.05rem; line-height: 2; }
-  .completed-banner .en-text { font-family: var(--en-font); font-size: 0.85rem; color: rgba(255,255,255,0.7); direction: ltr; line-height: 1.6; margin-top: 8px; }
-  .completed-banner .total-duration { font-family: var(--en-font); font-size: 1.4rem; font-weight: 700; color: var(--gold); margin-top: 12px; direction: ltr; }
-
-  .about-section { background: linear-gradient(135deg, var(--green-deep), #122c21); border-radius: 20px; padding: 32px 24px; margin-top: 40px; text-align: center; box-shadow: var(--shadow); position: relative; overflow: hidden; border: 1px solid rgba(201,168,76,0.15); }
-  .about-section::after { content: '🕋'; position: absolute; left: -20px; bottom: -30px; font-size: 10rem; opacity: 0.03; pointer-events: none; }
-  .about-section .about-icon { font-size: 2.2rem; margin-bottom: 12px; }
-  .about-section h3 { font-family: var(--dua-font); color: var(--gold); font-size: 1.6rem; margin-bottom: 12px; }
-  .about-section .about-title-en { font-family: var(--en-font); color: var(--gold); font-size: 1.1rem; font-weight: 600; margin-bottom: 12px; direction: ltr; }
-  .about-section p { font-size: 0.95rem; line-height: 2; color: var(--cream); margin-bottom: 14px; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
-  .about-section .about-text-en { font-family: var(--en-font); font-size: 0.85rem; direction: ltr; color: rgba(255,255,255,0.85); line-height: 1.7; margin-bottom: 0; }
-  .about-section .heart-icon { color: var(--gold); font-size: 1.2rem; display: block; margin: 16px auto; }
-
-  .contact-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 24px; background: rgba(255,255,255,0.05); border: 1px solid rgba(201,168,76,0.3); border-radius: 12px; color: var(--gold-light); font-family: var(--en-font); font-size: 0.9rem; text-decoration: none; transition: all 0.3s; cursor: pointer; }
-  .contact-btn:hover { background: rgba(201,168,76,0.2); color: var(--white); }
-  .contact-btn .contact-text-ar { font-family: var(--ar-font); }
+:root {
+  /* Dark Mode (Default) */
+  --bg: #091A10; --bg2: #0F2418; --card: rgba(255,255,255,.044); --cb: rgba(196,152,64,.18);
+  --gold: #C49840; --gold-l: #DDB96A; --gold-d: rgba(196,152,64,.12);
+  --green-l: #40916C; --cream: #F2E8D0; --cream-d: rgba(242,232,208,.60);
+  --red: #D97070; --blue: #82B8D4; --nav-h: 66px; --r: 14px;
   
-  .share-btn { background: rgba(82, 183, 136, 0.15); border-color: rgba(82, 183, 136, 0.4); color: var(--green-light); }
-  .share-btn:hover { background: var(--green-light); color: var(--white); }
+  /* Font Scaling Variable */
+  --f-scale: 1;
+}
 
-  @keyframes fadeDown { from { opacity:0; transform:translateY(-16px); } to { opacity:1; transform:translateY(0); } }
-  @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+/* Light Mode Overrides */
+body.light {
+  --bg: #F5F2EB; --bg2: #FFFFFF; --card: #FFFFFF; 
+  --cb: rgba(196,152,64,.3);
+  --cream: #1A251E; --cream-d: #4A554E; 
+  --gold: #A07828; --gold-d: rgba(196,152,64,.15);
+  --gold-l: #8A6420;
+  --green-l: #2D6A4F; --red: #B33939; --blue: #2980B9;
+}
+body.light .modal { background: var(--bg2); box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+body.light .bnav { background: var(--bg2); border-top: 1px solid var(--cb); }
+body.light .dua-ar { background: rgba(196,152,64,.08); }
+body.light .dua-en { background: rgba(0,0,0,.03); }
+body.light .dc.cur { background: #FAF5E8; border-color: var(--gold); }
+body.light .dc.done { background: #F0F5F2; }
+body.light .prog-bar-bg { background: rgba(0,0,0,.08); }
+body.light .pb-bar-bg { background: rgba(0,0,0,.08); }
+body.light .fg input[type=text] { background: #FFFFFF; color: var(--cream); }
+body.light .faq-search input { background: #FFFFFF; color: var(--cream); }
+body.light .notice { background: #FAF5E8; }
 
-  @media (max-width: 600px) {
-    .header h1 { font-size: 2rem; }
-    .dua-arabic { font-size: 1.2rem; }
-    .step-title { font-size: 1.2rem; }
-    .counter-display { font-size: 2.8rem; width: 80px; height: 80px; }
-    .log-table th, .log-table td { padding: 6px 8px; font-size: 0.65rem; }
-  }
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow-x:hidden;background:var(--bg);color:var(--cream);
+  font-family:'Noto Naskh Arabic',serif;font-size:16px;line-height:1.6;transition:background-color 0.3s, color 0.3s;}
+body::before{content:'';position:fixed;inset:0;opacity:.03;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cpath d='M50 5L95 50 50 95 5 50Z' fill='none' stroke='%23C49840' stroke-width='1'/%3E%3Cpath d='M50 22L78 50 50 78 22 50Z' fill='none' stroke='%23C49840' stroke-width='.5'/%3E%3Ccircle cx='50' cy='50' r='8' fill='none' stroke='%23C49840' stroke-width='.5'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0}
+.app{max-width:480px;margin:0 auto;min-height:100vh;position:relative;z-index:1;padding-bottom:calc(var(--nav-h) + 24px)}
+
+/* ONBOARDING */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:1000;display:flex;
+align-items:flex-start;justify-content:center;padding:16px 16px 80px;overflow-y:auto;backdrop-filter:blur(6px)}
+.overlay.hidden{display:none}
+.modal{background:#0F2418;border:1px solid var(--cb);border-radius:20px;padding:24px 20px;
+width:100%;max-width:380px;text-align:center;transition:background-color 0.3s}
+.modal-bism{font-family:'Scheherazade New',serif;font-size:1.9rem;color:var(--gold);margin-bottom:10px;line-height:1.5}
+.modal h2{font-family:'Scheherazade New',serif;font-size:1.4rem;color:var(--cream);margin-bottom:5px}
+.modal>p{color:var(--cream-d);font-size:.85rem;margin-bottom:18px}
+.fg{margin-bottom:14px;text-align:right}
+.fg label{display:block;color:var(--gold);font-size:.8rem;margin-bottom:5px}
+.fg input[type=text]{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--cb);
+border-radius:10px;padding:11px 13px;color:var(--cream);font-family:'Noto Naskh Arabic',serif;
+font-size:1rem;outline:none;text-align:right}
+.fg input:focus{border-color:var(--gold)}
+.rg{display:flex;gap:7px;flex-wrap:wrap}
+.rb{flex:1;min-width:70px;padding:9px 6px;border-radius:10px;border:1px solid var(--cb);
+background:transparent;color:var(--cream-d);font-family:'Noto Naskh Arabic',serif;
+font-size:.82rem;cursor:pointer;transition:all .2s;text-align:center}
+.rb.on{background:var(--gold-d);border-color:var(--gold);color:var(--gold)}
+.btn-start{width:100%;padding:13px;border-radius:12px;
+background:linear-gradient(135deg,var(--gold),#A07828);border:none;
+color:#FFFFFF;font-family:'Noto Naskh Arabic',serif;font-size:1.05rem;
+font-weight:700;cursor:pointer;margin-top:10px}
+.btn-start:active{opacity:.82}
+
+/* HAJJ TYPE INFO CARDS */
+.type-info-wrap{margin-bottom:14px;text-align:right}
+.type-info-wrap label{display:block;color:var(--gold);font-size:.8rem;margin-bottom:8px}
+.type-cards{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.type-card{background:rgba(255,255,255,.04);border:1px solid var(--cb);border-radius:10px;
+padding:10px 12px;cursor:pointer;text-align:right;transition:all .2s}
+.type-card.selected{border-color:var(--gold);background:var(--gold-d)}
+.tc-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.tc-name{font-family:'Scheherazade New',serif;font-size:1rem;color:var(--cream)}
+.tc-badge{font-size:.65rem;padding:2px 8px;border-radius:8px;background:rgba(196,152,64,.15);
+color:var(--gold);border:1px solid rgba(196,152,64,.25)}
+.tc-desc{font-size:.76rem;color:var(--cream-d);margin-top:5px;line-height:1.6}
+.tc-en{font-size:.68rem;color:var(--cream-d);font-family:'Cormorant Garamond',serif;
+font-style:italic;margin-top:3px;direction:ltr;text-align:left}
+
+/* HEADER */
+.app-header{padding:16px 16px 10px;display:flex;align-items:center;justify-content:space-between;
+border-bottom:1px solid rgba(196,152,64,.1)}
+.hd-left .hd-hijri{font-family:'Scheherazade New',serif;font-size:.95rem;color:var(--gold)}
+.hd-left .hd-greg{font-size:.72rem;color:var(--cream-d);font-family:'Cormorant Garamond',serif}
+.hd-right{display:flex; align-items:center; gap:12px; text-align:left}
+.hd-name{font-size:.88rem;color:var(--cream);font-weight:600}
+.hd-type{font-size:.72rem;color:var(--gold)}
+.edit-btn{background:none;border:1px solid var(--cb);border-radius:8px;
+padding:3px 8px;color:var(--cream-d);font-size:.7rem;cursor:pointer;
+margin-top:3px;font-family:'Noto Naskh Arabic',serif}
+.theme-btn{background:var(--card);border:1px solid var(--cb);border-radius:50%;
+width:38px;height:38px;display:flex;align-items:center;justify-content:center;
+cursor:pointer;font-size:1.1rem;transition:all 0.3s;color:var(--cream);}
+.theme-btn:active{transform:scale(0.9);}
+.info-btn{background:var(--card);border:1px solid var(--cb);border-radius:50%;
+width:38px;height:38px;display:flex;align-items:center;justify-content:center;
+cursor:pointer;font-size:1.1rem;transition:all 0.3s;color:var(--cream);margin-right:6px;}
+.info-btn:active{transform:scale(0.9);}
+
+/* BOTTOM NAV */
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+width:100%;max-width:480px;height:var(--nav-h);background:#07150D;
+border-top:1px solid rgba(196,152,64,.12);display:flex;z-index:100;transition:background-color 0.3s}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+gap:2px;cursor:pointer;border:none;background:transparent;padding:0}
+.ni .ico{font-size:1.25rem;line-height:1;transition:transform .2s}
+.ni .lbl{font-size:.58rem;color:var(--cream-d);font-family:'Noto Naskh Arabic',serif}
+.ni.on .ico{transform:scale(1.18)}
+.ni.on .lbl{color:var(--gold)}
+
+/* FONT RESIZER */
+.font-resizer { display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:14px; background:var(--card); border:1px solid var(--cb); padding:8px 14px; border-radius:12px; }
+.btn-fs { background:var(--gold-d); border:1px solid var(--gold); color:var(--gold); border-radius:8px; padding:4px 14px; font-weight:bold; cursor:pointer; font-family:sans-serif; font-size:1rem;}
+.btn-fs:active { background:var(--gold); color:#FFF; }
+
+/* PAGES */
+.page{display:none;padding:14px 14px 8px;animation:fadeIn .25s ease}
+.page.on{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.pg-title{font-family:'Scheherazade New',serif;font-size:1.3rem;color:var(--gold);margin-bottom:14px}
+.card{background:var(--card);border:1px solid var(--cb);border-radius:var(--r);padding:14px;margin-bottom:10px}
+
+/* DASHBOARD */
+.prog-bar-bg{height:5px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;margin-top:6px}
+.prog-bar{height:100%;background:linear-gradient(90deg,var(--green-l),var(--gold));border-radius:3px;transition:width .5s}
+.session-bar{display:flex;align-items:center;justify-content:space-between;
+background:var(--card);border:1px solid var(--cb);border-radius:var(--r);
+padding:10px 14px;margin-bottom:12px}
+.sb-timer{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--cream)}
+.sb-label{font-size:.74rem;color:var(--cream-d)}
+.sb-reset{background:none;border:1px solid rgba(217,112,112,.35);border-radius:8px;
+padding:5px 10px;color:var(--red);font-size:.72rem;cursor:pointer;font-family:'Noto Naskh Arabic',serif;transition:all 0.3s;}
+.day-cards{display:flex;flex-direction:column;gap:8px}
+.dc{background:var(--card);border:1px solid var(--cb);border-radius:var(--r);
+padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all .25s}
+.dc.cur{border-color:var(--gold);background:var(--gold-d)}
+.dc.done{border-color:rgba(64,145,108,.4);opacity:.75}
+.dc.locked{opacity:.35;cursor:default}
+.dc-badge{width:42px;height:42px;border-radius:50%;border:1px solid var(--cb);
+display:flex;flex-direction:column;align-items:center;justify-content:center;
+flex-shrink:0;line-height:1.1;background:rgba(196,152,64,.08)}
+.dc.cur .dc-badge{border-color:var(--gold)}
+.dc-badge .db-dh{font-size:.6rem;color:var(--gold)}
+.dc-badge .db-n{font-size:1rem;font-family:'Scheherazade New',serif;color:var(--cream)}
+.dc-info{flex:1}
+.dc-info h3{font-size:.9rem;color:var(--cream)}
+.dc-info p{font-size:.74rem;color:var(--cream-d);margin-top:1px}
+.dc-info .dc-en{font-size:.68rem;color:rgba(242,232,208,.45);font-family:'Cormorant Garamond',serif;font-style:italic}
+
+/* RITUALS */
+.day-tabs{display:flex;gap:5px;overflow-x:auto;padding-bottom:3px;margin-bottom:14px;scrollbar-width:none}
+.day-tabs::-webkit-scrollbar{display:none}
+.dtab{flex-shrink:0;padding:5px 11px;border-radius:18px;border:1px solid var(--cb);
+background:transparent;color:var(--cream-d);font-family:'Noto Naskh Arabic',serif;
+font-size:.77rem;cursor:pointer;transition:all .2s}
+.dtab.on{background:var(--gold-d);border-color:var(--gold);color:var(--gold)}
+.step{display:flex;align-items:flex-start;gap:10px;padding:11px 13px;
+background:var(--card);border:1px solid var(--cb);border-radius:12px;
+margin-bottom:7px;cursor:pointer;transition:border-color .2s}
+.step.done{opacity:.55;border-color:rgba(64,145,108,.35);background:rgba(64,145,108,.06)}
+.step.done .s-ar{text-decoration:line-through;text-decoration-color:var(--green-l)}
+.step.info-step{cursor:default;background:rgba(196,152,64,.05);border-color:rgba(196,152,64,.2)}
+.s-chk{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--cb);
+flex-shrink:0;display:flex;align-items:center;justify-content:center;
+font-size:.75rem;transition:all .2s;margin-top:2px}
+.step.done .s-chk{background:var(--green-l);border-color:var(--green-l);color:#fff}
+.step.info-step .s-chk{background:rgba(196,152,64,.15);border-color:var(--gold);color:var(--gold)}
+.s-body{flex:1}
+.s-ar{font-size:calc(.92rem * var(--f-scale));color:var(--cream);line-height:1.5;transition:font-size 0.2s}
+.s-en{font-size:calc(.74rem * var(--f-scale));color:rgba(242,232,208,.65);font-family:'Cormorant Garamond',serif;
+font-style:italic;margin-top:3px;direction:ltr;text-align:left;line-height:1.4;transition:font-size 0.2s}
+.s-note{font-size:.72rem;color:var(--gold);margin-top:3px}
+.badges{display:flex;gap:4px;margin-top:5px;flex-wrap:wrap}
+.bdg{font-size:.62rem;padding:1px 7px;border-radius:8px;font-family:'Noto Naskh Arabic',serif}
+.bdg.rukn{background:rgba(196,152,64,.15);color:var(--gold);border:1px solid rgba(196,152,64,.3)}
+.bdg.wajib{background:rgba(130,184,212,.12);color:var(--blue);border:1px solid rgba(130,184,212,.25)}
+.bdg.sunnah{background:rgba(64,145,108,.15);color:var(--green-l);border:1px solid rgba(64,145,108,.3)}
+.bdg.women{background:rgba(217,112,112,.12);color:var(--red);border:1px solid rgba(217,112,112,.25)}
+.bdg.men{background:rgba(130,184,212,.1);color:var(--blue);border:1px solid rgba(130,184,212,.2)}
+.bdg.info{background:rgba(196,152,64,.1);color:var(--gold-l);border:1px solid rgba(196,152,64,.2)}
+
+/* COUNTERS */
+.ctr-section{margin-bottom:18px}
+.ctr-head{font-size:.72rem;color:var(--gold);letter-spacing:.06em;font-family:'Cormorant Garamond',serif;
+font-weight:600;text-transform:uppercase;margin-bottom:9px;display:flex;align-items:center;gap:8px}
+.ctr-head::after{content:'';flex:1;height:1px;background:var(--cb)}
+.tawaf-box{background:var(--card);border:1px solid var(--cb);border-radius:var(--r);padding:14px;margin-bottom:10px}
+.tb-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.tb-name{font-family:'Scheherazade New',serif;font-size:1rem;color:var(--cream)}
+.tb-sub-ar{font-size:.72rem;color:var(--cream-d);margin-top:2px}
+.tb-sub-en{font-size:.68rem;color:rgba(242,232,208,.5);font-family:'Cormorant Garamond',serif;
+font-style:italic;margin-top:1px;direction:ltr;text-align:left}
+.tb-badge{font-size:.7rem;color:var(--gold);background:var(--gold-d);padding:3px 9px;
+border-radius:8px;border:1px solid var(--cb);white-space:nowrap}
+.rounds-row{display:flex;gap:5px;justify-content:center;margin-bottom:10px;flex-wrap:wrap}
+.rdot{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--cb);
+display:flex;align-items:center;justify-content:center;font-size:.78rem;
+color:var(--cream-d);cursor:pointer;transition:all .28s}
+.rdot.done{background:var(--gold);border-color:var(--gold);color:#091A10;font-weight:700}
+.rdot.cur{border-color:var(--gold);color:var(--gold);animation:glow 1.8s infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(196,152,64,.4)}50%{box-shadow:0 0 0 7px rgba(196,152,64,0)}}
+.tb-btns{display:flex;gap:7px}
+.btn-lap{flex:1;padding:9px;border-radius:10px;border:1px solid var(--gold);
+background:var(--gold-d);color:var(--gold);font-family:'Noto Naskh Arabic',serif;
+font-size:.82rem;cursor:pointer;transition:all .15s}
+.btn-lap:active{background:var(--gold);color:#091A10;transform:scale(.96)}
+.btn-lap.done-all{background:var(--green-l);border-color:var(--green-l);color:#fff}
+.btn-rst{padding:9px 13px;border-radius:10px;border:1px solid rgba(217,112,112,.3);
+background:rgba(217,112,112,.08);color:var(--red);font-size:.8rem;cursor:pointer}
+.lap-info{font-size:.7rem;color:var(--cream-d);text-align:center;margin-top:5px;
+font-family:'Cormorant Garamond',serif}
+.tawaf-done{display:none;text-align:center;padding:8px;background:rgba(64,145,108,.12);
+border:1px solid rgba(64,145,108,.3);border-radius:10px;margin-top:8px;
+font-size:.85rem;color:var(--green-l);font-family:'Scheherazade New',serif}
+.tawaf-done.show{display:block}
+.pebble-box{background:var(--card);border:1px solid var(--cb);border-radius:var(--r);
+padding:14px;text-align:center;margin-bottom:12px}
+.pb-big{font-family:'Scheherazade New',serif;font-size:3.2rem;color:var(--cream);line-height:1}
+.pb-of{font-size:.78rem;color:var(--cream-d)}
+.pb-bar-bg{height:7px;background:rgba(255,255,255,.08);border-radius:4px;margin:8px 0;overflow:hidden}
+.pb-bar{height:100%;background:linear-gradient(90deg,var(--green-l),var(--gold));border-radius:4px;transition:width .3s}
+.pb-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.btn-pb{padding:9px 16px;border-radius:10px;border:1px solid var(--gold);background:var(--gold-d);
+color:var(--gold);font-family:'Noto Naskh Arabic',serif;font-size:.85rem;cursor:pointer}
+.btn-pb:active{background:var(--gold);color:#091A10}
+.btn-pb.neg{border-color:var(--red);color:var(--red);background:rgba(217,112,112,.08)}
+.jam-day-sec{margin-bottom:14px}
+.jam-day-title{font-size:.82rem;color:var(--cream);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.jam-day-title::after{content:'';flex:1;height:1px;background:var(--cb)}
+.jam-row{display:flex;gap:7px}
+.jam-col{flex:1;background:var(--card);border:1px solid var(--cb);border-radius:12px;padding:9px 7px;text-align:center}
+.jam-col.disabled{opacity:.28;pointer-events:none}
+.jam-col.complete{border-color:rgba(64,145,108,.4);background:rgba(64,145,108,.07)}
+.jcn{font-size:.7rem;margin-bottom:5px}
+.jcn.s{color:var(--green-l)}.jcn.w{color:var(--blue)}.jcn.k{color:var(--gold)}
+.jcount{font-family:'Scheherazade New',serif;font-size:1.35rem;color:var(--cream)}
+.pdots{display:flex;gap:3px;justify-content:center;margin:4px 0;flex-wrap:wrap}
+.pd{width:9px;height:9px;border-radius:50%;background:var(--cb);transition:background .2s}
+.pd.hit{background:var(--gold)}
+.jam-btn{width:100%;padding:6px;border-radius:8px;border:1px solid var(--gold);
+background:var(--gold-d);color:var(--gold);font-size:.95rem;cursor:pointer;margin-top:4px}
+.jam-btn:active{background:var(--gold);color:#091A10;transform:scale(.95)}
+.jam-btn.done{background:var(--green-l);border-color:var(--green-l);color:#fff;cursor:default}
+
+/* DUAS */
+.dua-cat{margin-bottom:18px}
+.dua-cat-hd{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.dua-cat-title{font-family:'Scheherazade New',serif;font-size:1.05rem;color:var(--gold);white-space:nowrap}
+.dua-cat-line{flex:1;height:1px;background:var(--cb)}
+.dua-item{background:var(--card);border:1px solid var(--cb);border-radius:12px;overflow:hidden;margin-bottom:7px}
+.dua-hd{padding:11px 13px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.dua-hd h4{font-size:.88rem;color:var(--cream);flex:1}
+.dtog{color:var(--gold);font-size:.85rem;transition:transform .2s;flex-shrink:0;margin-right:6px}
+.dua-item.open .dtog{transform:rotate(180deg)}
+.dua-body{display:none;padding:0 13px 13px}
+.dua-item.open .dua-body{display:block}
+.dua-ar{font-family:'Scheherazade New',serif;font-size:calc(1.18rem * var(--f-scale));color:var(--cream);
+line-height:2.1;text-align:right;direction:rtl;padding:10px 12px;
+background:rgba(196,152,64,.06);border-radius:8px;border-right:3px solid var(--gold);margin-bottom:8px;transition:font-size 0.2s}
+.dua-en{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:calc(.9rem * var(--f-scale));
+color:rgba(242,232,208,.8);direction:ltr;text-align:left;margin-bottom:7px;
+line-height:1.6;padding:6px 10px;background:rgba(255,255,255,.03);border-radius:6px;transition:font-size 0.2s}
+.dua-occ{font-size:.72rem;color:var(--gold);margin-bottom:8px}
+.dua-copy{padding:5px 12px;border-radius:7px;border:1px solid var(--cb);
+background:transparent;color:var(--cream-d);font-size:.72rem;cursor:pointer;
+font-family:'Noto Naskh Arabic',serif}
+.dua-copy:active{background:var(--gold-d);color:var(--gold)}
+
+/* LEARN */
+.learn-item{background:var(--card);border:1px solid var(--cb);border-radius:var(--r);overflow:hidden;margin-bottom:9px}
+.learn-hd{padding:13px 14px;display:flex;gap:11px;align-items:center;cursor:pointer}
+.learn-ico{font-size:1.3rem;flex-shrink:0}
+.learn-hd-txt{flex:1}
+.learn-hd-txt h3{font-size:.92rem;color:var(--cream)}
+.learn-hd-txt p{font-size:.72rem;color:rgba(242,232,208,.65);font-family:'Cormorant Garamond',serif;
+font-style:italic;margin-top:1px}
+.learn-tog{color:var(--gold);font-size:.85rem;transition:transform .25s}
+.learn-item.open .learn-tog{transform:rotate(180deg)}
+.learn-body{display:none;padding:0 14px 14px}
+.learn-item.open .learn-body{display:block}
+.learn-body p{font-size:calc(.88rem * var(--f-scale));color:var(--cream-d);line-height:1.85;margin-bottom:8px;transition:font-size 0.2s}
+.hl{padding:9px 12px;background:rgba(196,152,64,.07);border-right:3px solid var(--gold);
+border-radius:6px;font-size:calc(.88rem * var(--f-scale));color:var(--cream);margin:8px 0;line-height:1.7;transition:font-size 0.2s}
+.origin{background:rgba(64,145,108,.08);border:1px solid rgba(64,145,108,.2);
+border-radius:8px;padding:9px 12px;font-size:calc(.82rem * var(--f-scale));color:var(--green-l);margin-top:8px;transition:font-size 0.2s}
+
+/* FAQ */
+.faq-search{position:relative;margin-bottom:12px}
+.faq-search input{width:100%;padding:10px 13px 10px 36px;background:var(--card);
+border:1px solid var(--cb);border-radius:11px;color:var(--cream);
+font-family:'Noto Naskh Arabic',serif;font-size:.9rem;outline:none;direction:rtl}
+.faq-search input:focus{border-color:var(--gold)}
+.faq-si{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--cream-d)}
+.faq-filter{display:flex;gap:5px;flex-wrap:wrap;padding-bottom:4px;margin-bottom:12px;}
+.faq-filter::-webkit-scrollbar{display:none}
+.fc{flex-shrink:0;padding:4px 11px;border-radius:18px;border:1px solid var(--cb);
+background:transparent;color:var(--cream-d);font-family:'Noto Naskh Arabic',serif;font-size:.75rem;cursor:pointer}
+.fc.on{background:var(--gold-d);border-color:var(--gold);color:var(--gold)}
+.faq-item{background:var(--card);border:1px solid var(--cb);border-radius:11px;margin-bottom:7px;overflow:hidden}
+.faq-q{padding:11px 13px;display:flex;gap:9px;align-items:flex-start;cursor:pointer}
+.faq-qn{color:var(--gold);font-size:.75rem;flex-shrink:0;margin-top:3px;font-family:'Cormorant Garamond',serif;font-weight:600}
+.faq-qt{flex:1;font-size:.88rem;color:var(--cream);line-height:1.5}
+.faq-qi{color:var(--gold);font-size:.78rem;flex-shrink:0;margin-top:4px;transition:transform .2s}
+.faq-item.open .faq-qi{transform:rotate(180deg)}
+.faq-a{display:none;padding:0 13px 12px;border-top:1px solid rgba(196,152,64,.08)}
+.faq-item.open .faq-a{display:block}
+.faq-a p{font-size:.84rem;color:var(--cream-d);line-height:1.75;padding-top:9px}
+.faq-a .madhab{font-size:.76rem;color:var(--blue);margin-top:6px;padding-top:5px;border-top:1px solid rgba(130,184,212,.1)}
+.faq-hidden{display:none!important}
+
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:var(--cb);border-radius:2px}
+.divider{height:1px;background:var(--cb);margin:14px 0}
+.notice{background:rgba(196,152,64,.06);border:1px solid rgba(196,152,64,.18);
+border-radius:10px;padding:10px 12px;font-size:.82rem;color:var(--cream-d);
+margin-bottom:12px;text-align:center}
+
+/* FLASH OVERLAY FOR HAPTIC FALLBACK */
+#flashOverlay {
+  position:fixed; inset:0; background:var(--gold);
+  opacity:0; pointer-events:none; z-index:9999; transition:opacity 0.15s;
+}
 </style>
+
+<!-- PWA Tags -->
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="icon-192.png">
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js'); });
+  }
+</script>
 </head>
 <body>
 
-<div class="offline-bar" id="offlineBar">📡 You're offline — don't worry, the app works fully offline!</div>
-<div class="online-restored" id="onlineBar" style="display:none;">✅ Back online</div>
-<div class="sync-status" id="syncStatus"></div>
+<!-- FLASH OVERLAY FOR iOS -->
+<div id="flashOverlay"></div>
 
-<div class="lang-toggle">
-  <button class="lang-btn active" aria-label="Toggle Bilingual Mode" onclick="setLang('both',this)">ثنائي</button>
-  <button class="lang-btn" aria-label="Toggle Arabic Language" onclick="setLang('ar',this)">عربي</button>
-  <button class="lang-btn" aria-label="Toggle English Language" onclick="setLang('en',this)">EN</button>
-</div>
+<!-- ONBOARDING -->
+<div class="overlay" id="onboarding">
+  <div class="modal">
+    <div class="modal-bism">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+    <h2>دليل الحج الشامل</h2>
+    <p>أدخل بياناتك لتخصيص تجربتك</p>
 
-<div class="live-clock-bar">
-  <div class="clock-time" id="liveClock" aria-live="polite">--:--:--</div>
-  <div class="clock-date" id="liveDate">---</div>
-</div>
+    <div class="fg">
+      <label>اسمك</label>
+      <input type="text" id="pName" placeholder="الاسم الكريم" autocomplete="off">
+    </div>
 
-<div class="install-prompt" id="installPrompt">
-  <div class="install-icon">📲</div>
-  <div class="install-text">
-    <div class="install-title">Install Umrah Guide</div>
-    <div class="install-desc">Works offline — no internet needed</div>
-  </div>
-  <button class="install-btn" id="installBtn">Install</button>
-  <button class="install-dismiss" aria-label="Dismiss Install Prompt" onclick="document.getElementById('installPrompt').classList.remove('show')">×</button>
-</div>
-
-<div class="container">
-
-  <!-- ONBOARDING MODAL -->
-  <div class="onboard-overlay" id="onboardOverlay">
-    <div class="onboard-card">
-      <div class="ob-icon">🕋</div>
-      <h2>بسم الله الرحمن الرحيم</h2>
-      <div class="ob-sub">Enter your details to begin your Umrah journey</div>
-      <div class="ob-field">
-        <label for="obName">الاسم <span class="ob-label-en">Your Name</span></label>
-        <input class="ob-input" id="obName" type="text" placeholder="أدخل اسمك / Enter your name" autocomplete="off">
+    <div class="fg">
+      <label>الجنس</label>
+      <div class="rg" id="genderGroup">
+        <button class="rb on" data-v="male">ذكر</button>
+        <button class="rb" data-v="female">أنثى</button>
       </div>
-      <div class="ob-field">
-        <label>الجنس <span class="ob-label-en">Gender (to personalize rules)</span></label>
-        <div class="ob-gender-options">
-          <button class="ob-gender-btn" data-gender="male" onclick="selectGender('male',this)">
-            <span class="ob-g-icon">🧔</span>
-            <span class="ob-g-label">رجل</span>
-            <span class="ob-g-label-en">Male</span>
-          </button>
-          <button class="ob-gender-btn" data-gender="female" onclick="selectGender('female',this)">
-            <span class="ob-g-icon">🧕</span>
-            <span class="ob-g-label">امرأة</span>
-            <span class="ob-g-label-en">Female</span>
-          </button>
+    </div>
+
+    <!-- HAJJ TYPE CARDS WITH EXPLANATION -->
+    <div class="type-info-wrap">
+      <label>نوع الحج — اختر نوعك</label>
+      <div class="type-cards" id="typeCards">
+
+        <div class="type-card selected" data-v="tamattu" onclick="selectType(this)">
+          <div class="tc-head">
+            <span class="tc-name">حج التمتع</span>
+            <span class="tc-badge">الأفضل لغير أهل مكة</span>
+          </div>
+          <div class="tc-desc">أداء العمرة أولاً والتحلل منها، ثم الإحرام بالحج يوم ٨ ذو الحجة من مكة. يجب الهدي.</div>
+          <div class="tc-en">Umrah first → full Tahallul → new Ihram on Day 8 for Hajj. Hady required.</div>
+        </div>
+
+        <div class="type-card" data-v="ifrad" onclick="selectType(this)">
+          <div class="tc-head">
+            <span class="tc-name">حج الإفراد</span>
+            <span class="tc-badge">حج فقط</span>
+          </div>
+          <div class="tc-desc">الإحرام بالحج فقط من الميقات دون عمرة. لا هدي واجب. طواف القدوم سنة عند الوصول.</div>
+          <div class="tc-en">Ihram for Hajj only from Miqat. No Hady required. Tawaf al-Qudum on arrival is Sunnah.</div>
+        </div>
+
+        <div class="type-card" data-v="qiran" onclick="selectType(this)">
+          <div class="tc-head">
+            <span class="tc-name">حج القران</span>
+            <span class="tc-badge">حج + عمرة في إحرام واحد</span>
+          </div>
+          <div class="tc-desc">الإحرام بالحج والعمرة معاً في إحرام واحد. لا تحلل بين العمرة والحج. يجب الهدي. طواف القدوم سنة.</div>
+          <div class="tc-en">Single Ihram for both Hajj + Umrah. No Tahallul between them. Hady required. Tawaf al-Qudum is Sunnah.</div>
+        </div>
+
+      </div>
+      <input type="hidden" id="selectedType" value="tamattu">
+    </div>
+
+    <div class="fg">
+      <label>اليوم الحالي من ذي الحجة</label>
+      <div class="rg" id="dayGroup">
+        <button class="rb on" data-v="8">٨</button>
+        <button class="rb" data-v="9">٩</button>
+        <button class="rb" data-v="10">١٠</button>
+        <button class="rb" data-v="11">١١</button>
+        <button class="rb" data-v="12">١٢</button>
+        <button class="rb" data-v="13">١٣</button>
+      </div>
+    </div>
+
+    <button class="btn-start" onclick="startApp()">بسم الله — ابدأ 🕋</button>
+  </div>
+</div>
+
+<!-- APP -->
+
+<div class="app" id="app">
+  <div class="app-header">
+    <div class="hd-left">
+      <div class="hd-hijri" id="hHijri">—</div>
+      <div class="hd-greg" id="hGreg">—</div>
+    </div>
+    <div class="hd-right">
+      <div>
+        <div class="hd-name" id="hName">—</div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <div class="hd-type" id="hType">—</div>
+          <button class="edit-btn" onclick="editProfile()">تعديل</button>
         </div>
       </div>
-      <button class="ob-start-btn" id="obStartBtn" disabled onclick="completeOnboarding()">
-        <span class="lang-ar">ابدأ العمرة 🕋</span>
-        <span class="lang-en"> Start Umrah</span>
-      </button>
-    </div>
-  </div>
-
-  <!-- USER BADGE -->
-  <div class="user-badge" id="userBadge">
-    <div class="user-badge-inner">
-      <span class="ub-icon" id="ubIcon">🧔</span>
-      <span id="ubName">---</span>
-    </div>
-  </div>
-
-  <div class="restore-banner" id="restoreBanner">
-    <h3>يوجد تقدم محفوظ</h3>
-    <div class="restore-en">Previous Umrah session found</div>
-    <div class="restore-info" id="restoreInfo">---</div>
-    <div class="restore-btns">
-      <button class="restore-btn primary" onclick="restoreState()">↻ Restore | استعادة</button>
-      <button class="restore-btn secondary" onclick="freshStart()">✕ Start Fresh | بداية جديدة</button>
-    </div>
-  </div>
-
-  <div class="header">
-    <div class="header-ornament"></div>
-    <h1>دليل العمرة الشامل</h1>
-    <div class="subtitle">من الإحرام حتى الإحلال — دليلك الكامل أثناء أداء العمرة</div>
-    <div class="subtitle-en lang-en">Complete Umrah Guide — From Ihram to Completion</div>
-    <div class="mosque-icon">🕋</div>
-  </div>
-
-  <div class="start-umrah-wrap" id="startWrap">
-    <button class="start-umrah-btn" id="startBtn" onclick="startUmrah()">
-      <span>🕋</span>
-      <span class="lang-ar">ابدأ العمرة</span>
-      <span class="lang-en">Start Umrah</span>
-    </button>
-  </div>
-
-  <div class="umrah-timer" id="umrahTimer">
-    <div class="timer-card">
-      <div class="timer-label lang-ar">⏱️ الوقت المنقضي منذ بدء العمرة</div>
-      <div class="timer-label-en lang-en">Elapsed since Umrah started</div>
-      <div class="timer-elapsed" id="elapsedTime" aria-live="polite">00:00:00</div>
-      <div class="timer-paused-label" id="pausedLabel">⏸️ PAUSED | متوقف</div>
-      <div class="timer-started" id="startedAt">---</div>
-      <button class="pause-btn" id="pauseBtn" onclick="togglePause()">
-        <span id="pauseBtnText">⏸ Pause | إيقاف مؤقت</span>
-      </button>
-    </div>
-  </div>
-
-  <div class="progress-wrap">
-    <div class="progress-label">
-      <span class="lang-ar">تقدمك في أداء العمرة</span>
-      <span id="progressPercent" aria-live="polite">0%</span>
-    </div>
-    <div class="progress-label-en lang-en">Your Umrah Progress</div>
-    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
-    <div class="progress-steps" id="progressDots"></div>
-  </div>
-
-  <div id="stepsContainer"></div>
-
-  <div class="activity-log-section" id="activityLogSection">
-    <div class="activity-log-header" onclick="document.getElementById('activityLogSection').classList.toggle('open')">
-      <h3>📋 سجل النشاط | Activity Log</h3>
-      <span class="log-count" id="logCount">0 entries</span>
-    </div>
-    <div class="activity-log-body">
-      <table class="log-table">
-        <thead><tr><th>#</th><th>Time</th><th>Type</th><th>Activity</th><th>Duration</th></tr></thead>
-        <tbody id="logTableBody"></tbody>
-      </table>
-      <div class="export-buttons">
-        <button class="export-btn" onclick="exportLog()">📥 Export .txt</button>
-        <button class="export-btn cloud" onclick="syncToCloud()">☁️ Sync to Google Sheets</button>
-        <button class="export-btn reset-btn" onclick="confirmReset()">🗑️ Reset All Data</button>
+      <div style="display:flex;">
+        <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">☀️</button>
+        <button class="info-btn" onclick="switchPage('about')">ℹ️</button>
       </div>
     </div>
   </div>
 
-  <div class="completed-banner" id="completedBanner">
-    <div class="big-icon">🤲</div>
-    <h2>تقبّل الله عمرتك</h2>
-    <div class="en-title lang-en">May Allah Accept Your Umrah</div>
-    <p>اللهم تقبّل منّا إنّك أنت السميع العليم<br>وتُب علينا إنّك أنت التوّاب الرحيم</p>
-    <div class="en-text lang-en">O Allah, accept from us. You are the All-Hearing, All-Knowing.</div>
-    <div class="total-duration" id="totalDuration"></div>
+  <div class="page on" id="pg-dashboard">
+    <div class="pg-title">الرئيسية 🕋</div>
+    
+    <!-- EMERGENCY CARD -->
+    <div class="card" style="border-color: rgba(217,112,112,.3); background: rgba(217,112,112,.05); margin-bottom:14px;">
+      <h4 style="color: var(--red); font-size: 0.85rem; margin-bottom: 8px;">🚨 أرقام الطوارئ (Emergency)</h4>
+      <div style="display:flex; gap:8px; justify-content:space-between; text-align:center;">
+        <a href="tel:997" style="flex:1; padding:8px 4px; background:var(--card); border:1px solid var(--cb); border-radius:8px; text-decoration:none; color:var(--cream); font-size:0.8rem;">🚑 الإسعاف<br><b style="color:var(--red); font-family:sans-serif;">997</b></a>
+        <a href="tel:911" style="flex:1; padding:8px 4px; background:var(--card); border:1px solid var(--cb); border-radius:8px; text-decoration:none; color:var(--cream); font-size:0.8rem;">🚓 الشرطة<br><b style="color:var(--red); font-family:sans-serif;">911</b></a>
+        <a href="tel:1966" style="flex:1; padding:8px 4px; background:var(--card); border:1px solid var(--cb); border-radius:8px; text-decoration:none; color:var(--cream); font-size:0.8rem;">🕋 وزارة الحج<br><b style="color:var(--gold); font-family:sans-serif;">1966</b></a>
+      </div>
+    </div>
+
+    <div class="session-bar">
+      <div><div class="sb-label">وقت الجلسة</div><div class="sb-timer" id="sessionTimer">00:00:00</div></div>
+      <div><div class="sb-label" id="overallPct">٠٪ مكتمل</div></div>
+      <button class="sb-reset" onclick="confirmReset(this)">إعادة</button>
+    </div>
+    
+    <div class="card" style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--cream-d);margin-bottom:6px">
+        <span>التقدم الكلي</span><span id="stepsDone">—</span>
+      </div>
+      <div class="prog-bar-bg"><div class="prog-bar" id="mainProg" style="width:0%"></div></div>
+    </div>
+    
+    <div class="day-cards" id="dayCards"></div>
+    <div class="divider"></div>
+    <div class="notice" onclick="switchPage('about')" style="cursor:pointer; display:flex; justify-content:space-between; align-items:center; transition: transform 0.2s;">
+      <span>الحج المبرور ليس له جزاء إلا الجنة 🤲</span>
+      <span style="color:var(--gold); font-size:0.75rem; background:rgba(196,152,64,.15); padding:3px 8px; border-radius:8px; border:1px solid rgba(196,152,64,.3);">عن التطبيق 🤍</span>
+    </div>
   </div>
 
-  <div class="about-section">
-    <div class="about-icon">🤲</div>
-    <h3 class="lang-ar">عن هذا التطبيق</h3>
-    <div class="about-title-en lang-en">About This App</div>
-    
-    <p class="lang-ar">
-      تم تصميم هذا الدليل لتيسير رحلتك الإيمانية، ليكون رفيقاً لك يعمل بالكامل دون الحاجة للإنترنت.<br>
-      إن انتفعت بهذا العمل في عمرتك، فلا نرجو منك سوى دعوة صادقة بظهر الغيب للمطور وعائلته أمام الكعبة المشرفة بأن يغفر الله لنا ويرزقنا من فضله.
-    </p>
-    
-    <div class="heart-icon">✨</div>
-    
-    <p class="about-text-en lang-en">
-      This guide was created to assist you in your spiritual journey, keeping things simple, distraction-free, and completely offline.<br><br>
-      If this app helped you during your Umrah, all we humbly ask is that you remember the developer and their family in your sincere Du'as in front of the Ka'bah. 
-    </p>
+  <div class="page" id="pg-rituals">
+    <div class="pg-title">الشعائر اليومية</div>
+    <div class="day-tabs" id="dayTabs"></div>
+    <div id="ritualSteps"></div>
+  </div>
 
-    <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(201,168,76,0.2);">
-      <p class="lang-ar" style="font-size: 0.85rem; margin-bottom: 12px; color: rgba(255,255,255,0.8);">نسعد باستقبال ملاحظاتكم أو مشاركتكم للتطبيق:</p>
-      <p class="about-text-en lang-en" style="font-size: 0.8rem; margin-bottom: 12px; color: rgba(255,255,255,0.8);">We welcome your feedback or sharing the app with others:</p>
+  <div class="page" id="pg-counters">
+    <div class="pg-title">العدادات</div>
+    <div id="countersContent"></div>
+  </div>
+
+  <div class="page" id="pg-duas">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px">
+      <div class="pg-title" style="margin-bottom:0">الأدعية 🤲</div>
+      <div class="font-resizer">
+        <span style="font-size:0.75rem; color:var(--cream-d)">حجم الخط:</span>
+        <button class="btn-fs" onclick="changeFontSize(0.1)">A+</button>
+        <button class="btn-fs" onclick="changeFontSize(-0.1)">A-</button>
+      </div>
+    </div>
+    <div id="duasContent"></div>
+  </div>
+
+  <div class="page" id="pg-learn">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px">
+      <div class="pg-title" style="margin-bottom:0">الشعائر 📖</div>
+      <div class="font-resizer">
+        <span style="font-size:0.75rem; color:var(--cream-d)">حجم الخط:</span>
+        <button class="btn-fs" onclick="changeFontSize(0.1)">A+</button>
+        <button class="btn-fs" onclick="changeFontSize(-0.1)">A-</button>
+      </div>
+    </div>
+    <div id="learnContent"></div>
+  </div>
+
+  <div class="page" id="pg-faq">
+    <div class="pg-title">فتاوى وأسئلة ❓</div>
+    <div class="faq-search">
+      <span class="faq-si">🔍</span>
+      <input type="text" id="faqSearch" placeholder="ابحث في الأسئلة..." oninput="filterFaq()">
+    </div>
+    <div class="faq-filter" id="faqFilter"></div>
+    <div id="faqContent"></div>
+  </div>
+
+  <!-- ABOUT / GOOD WISHES PAGE -->
+  <div class="page" id="pg-about">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px">
+      <div class="pg-title" style="margin-bottom:0">عن التطبيق 🤍</div>
+      <button onclick="switchPage('dashboard')" style="background:var(--card); border:1px solid var(--cb); padding:5px 12px; border-radius:8px; color:var(--cream-d); font-family:'Noto Naskh Arabic',serif; font-size:0.8rem; cursor:pointer; transition:all 0.2s;">
+        🔙 رجوع
+      </button>
+    </div>
+    <div class="card" style="text-align: center; padding: 24px 14px;">
+      <h3 style="color:var(--gold); margin-bottom:12px; font-family:'Scheherazade New',serif; font-size:1.6rem;">صدقة جارية</h3>
+      <p style="color:var(--cream-d); font-size:0.9rem; margin-bottom:18px; line-height:1.8;">
+        تم تصميم وتطوير هذا التطبيق خالصاً لوجه الله تعالى، ليكون رفيقاً رقمياً يعين ضيوف الرحمن على أداء مناسكهم بكل يسر وطمأنينة.
+      </p>
       
-      <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-        <a href="mailto:myapps2026@hotmail.com" class="contact-btn">
-          <span>✉️</span> 
-          <span class="contact-text-ar lang-ar">تواصل معنا</span>
-          <span class="lang-en">Contact Us</span>
-        </a>
-        <button onclick="shareApp()" class="contact-btn share-btn">
-          <span>📤</span>
-          <span class="contact-text-ar lang-ar">شارك التطبيق</span>
-          <span class="lang-en">Share App</span>
+      <div style="background:rgba(196,152,64,.06); border:1px solid rgba(196,152,64,.2); border-radius:12px; padding:18px; margin-bottom:22px;">
+        <p style="font-family:'Scheherazade New',serif; font-size:1.35rem; color:var(--cream); line-height:2.1;">
+          "اللَّهُمَّ اغْفِرْ لِمُطَوِّرِ هَذَا التَّطْبِيقِ وَلِوَالِدَيْهِ وَلِأَهْلِهِ، وَارْزُقْهُمْ مِنْ حَيْثُ لَا يَحْتَسِبُونَ، وَاجْعَلْ هَذَا الْعَمَلَ ثِقَلاً فِي مِيزَانِ حَسَنَاتِهِمْ، وَتَقَبَّلْ مِنْ كُلِّ مَنِ اسْتَخْدَمَهُ وَنَشَرَهُ."
+        </p>
+        <button id="btnAmeen" onclick="sayAmeen(this)" style="margin-top:18px; width:100%; padding:14px; border-radius:10px; background:var(--gold); border:none; color:#091A10; font-family:'Noto Naskh Arabic',serif; font-size:1.1rem; font-weight:bold; cursor:pointer; transition:all 0.3s; box-shadow:0 4px 12px rgba(196,152,64,0.3);">
+          قُل آمين 🤲
         </button>
+      </div>
+      
+      <div style="display:flex; gap:10px; justify-content:center;">
+         <button onclick="shareApp(event, this)" style="flex:1; padding:12px 8px; border-radius:10px; border:1px solid var(--cb); background:var(--card); color:var(--cream); cursor:pointer; font-family:'Noto Naskh Arabic',serif; transition:all 0.2s;">
+           🔗 شارك التطبيق
+         </button>
+         <a href="mailto:myapps2026@hotmail.com?subject=دعاء وملاحظات حول تطبيق الحج" style="flex:1; padding:12px 8px; border-radius:10px; border:1px solid var(--cb); background:var(--card); color:var(--cream); cursor:pointer; text-decoration:none; font-family:'Noto Naskh Arabic',serif; display:inline-block; transition:all 0.2s;">
+           ✉️ تواصل معنا
+         </a>
       </div>
     </div>
   </div>
 
 </div>
+
+<nav class="bnav">
+  <button class="ni on" data-page="dashboard"><span class="ico">🕋</span><span class="lbl">الرئيسية</span></button>
+  <button class="ni" data-page="rituals"><span class="ico">📋</span><span class="lbl">الشعائر</span></button>
+  <button class="ni" data-page="counters"><span class="ico">🔢</span><span class="lbl">العدادات</span></button>
+  <button class="ni" data-page="duas"><span class="ico">🤲</span><span class="lbl">الأدعية</span></button>
+  <button class="ni" data-page="learn"><span class="ico">📖</span><span class="lbl">التعلم</span></button>
+  <button class="ni" data-page="faq"><span class="ico">❓</span><span class="lbl">الفتاوى</span></button>
+</nav>
 
 <script>
 // ============================================================
-// CONFIG — Connected to your Google Apps Script Web App URL
+// DATA: RITUALS, DUAS, LEARN, FAQ
 // ============================================================
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxsdMbrFBqrxuYoEURoIUsG2NdBAm0EA8mxKzxhc6fw0pC4rrcXbgje9nkv-8povTdW/exec';
+const RITUALS={
+8:[
+{ar:'الاغتسال قبل الإحرام — للرجال: مع التطيب',en:'Ghusl before Ihram — men may also apply perfume to body',typ:'sunnah',gen:'all',types:'all'},
+{ar:'صلاة ركعتين بنية الإحرام',en:"Pray two rak'ahs with intention of Ihram",typ:'sunnah',gen:'all',types:'all'},
+{ar:'نية الإحرام بالحج من مكة — بعد التحلل من العمرة',en:'Enter Ihram for Hajj from Makkah boundary — after Umrah completion',typ:'wajib',gen:'all',types:'tamattu',note:'التلبية: لبيك اللهم حجاً'},
+{ar:'الاستمرار في إحرام الحج القائم منذ الميقات',en:'Continue your Hajj Ihram — already in state since Miqat',typ:'wajib',gen:'all',types:'ifrad',note:'التلبية: لبيك اللهم حجاً'},
+{ar:'الاستمرار في إحرام الحج والعمرة القائم منذ الميقات',en:'Continue your combined Hajj + Umrah Ihram from the Miqat',typ:'wajib',gen:'all',types:'qiran',note:'التلبية: لبيك اللهم بحج وعمرة'},
+{ar:'لبس ثوبي الإحرام الأبيضين: الرداء والإزار — بلا مخيط',en:"Wear two unstitched white Ihram garments (rida' and izar)",typ:'wajib',gen:'men',types:'all'},
+{ar:'اجتناب جميع محظورات الإحرام',en:'Avoid all Ihram prohibitions: perfume, cutting hair/nails, intercourse, hunting, marriage contracts, head cover (men)',typ:'wajib',gen:'all',types:'all'},
+{ar:'الإكثار من التلبية — جهراً للرجال وسراً للنساء',en:'Recite Talbiyah frequently — aloud for men, quietly for women',typ:'sunnah',gen:'all',types:'all'},
+{ar:'التوجه إلى منى — الأفضل بعد صلاة الفجر',en:'Depart to Mina — best after Fajr prayer',typ:'sunnah',gen:'all',types:'all'},
+{ar:'صلاة الظهر والعصر والمغرب والعشاء والفجر قصراً في منى — دون جمع',en:"Shorten (not combine) Dhuhr, Asr, Maghrib, Isha', Fajr in Mina",typ:'sunnah',gen:'all',types:'all'},
+{ar:'المبيت في منى ليلة التاسع من ذي الحجة',en:'Spend the night of the 9th Dhul Hijjah in Mina',typ:'sunnah',gen:'all',types:'all'},
+],
+9:[
+{ar:'صلاة الفجر في منى',en:'Fajr prayer in Mina',typ:'sunnah',gen:'all',types:'all'},
+{ar:'الإفاضة إلى عرفة بعد طلوع الشمس',en:'Move to Arafat after sunrise',typ:'wajib',gen:'all',types:'all'},
+{ar:'الاغتسال في نمرة قبل الوقوف',en:'Ghusl at Namirah before the standing (recommended)',typ:'sunnah',gen:'all',types:'all'},
+{ar:'سماع خطبة عرفة في وادي نمرة',en:'Attend the Arafat sermon at Wadi Namirah',typ:'sunnah',gen:'all',types:'all'},
+{ar:'صلاة الظهر والعصر جمعاً وقصراً في نمرة',en:'Pray Dhuhr + Asr combined and shortened at Namirah',typ:'sunnah',gen:'all',types:'all'},
+{ar:'الوقوف بعرفة — ركن الحج الأعظم — من الزوال حتى الغروب',en:'Standing at Arafat — Greatest Pillar of Hajj — from noon to sunset',typ:'rukn',gen:'all',types:'all',note:'تأكد من الوقوف داخل حدود عرفة المعلّمة'},
+{ar:'الإكثار من الدعاء والذكر والتلبية في عرفة',en:'Abundantly supplicate, make dhikr, and recite Talbiyah at Arafat',typ:'sunnah',gen:'all',types:'all'},
+{ar:'الإفاضة إلى مزدلفة بعد غروب الشمس بهدوء',en:'Move calmly to Muzdalifah after sunset',typ:'wajib',gen:'all',types:'all'},
+{ar:'صلاة المغرب والعشاء جمعاً في مزدلفة',en:"Pray Maghrib + Isha' combined at Muzdalifah (one adhan, two iqamahs)",typ:'wajib',gen:'all',types:'all'},
+{ar:'المبيت في مزدلفة حتى ما بعد منتصف الليل',en:'Stay at Muzdalifah until after midnight (minimum)',typ:'wajib',gen:'all',types:'all'},
+{ar:'الوقوف بالمشعر الحرام والدعاء قبيل الفجر',en:'Stand at Al-Mash\'ar Al-Haram and supplicate before dawn',typ:'sunnah',gen:'all',types:'all'},
+{ar:'جمع الحصيات: 49 للمتعجل أو 70 للمتأخر — بحجم الحمص تقريباً',en:'Collect pebbles: 49 (early departure) or 70 (staying Day 13) — chickpea-sized',typ:'wajib',gen:'all',types:'all'},
+{ar:'يُرخَّص للضعفاء والنساء المغادرة بعد منتصف الليل إلى منى',en:'Women and weak may leave for Mina after midnight',typ:'sunnah',gen:'women',types:'all'},
+],
+10:[
+{ar:'صلاة الفجر في مزدلفة',en:'Fajr prayer at Muzdalifah',typ:'sunnah',gen:'all',types:'all'},
+{ar:'الإفاضة إلى منى قبيل شروق الشمس',en:'Move to Mina before sunrise',typ:'wajib',gen:'all',types:'all'},
+{ar:'رمي جمرة العقبة الكبرى: ٧ حصيات مع التكبير — وقطع التلبية عند أول حصاة',en:'Throw 7 pebbles at Jamarat al-Aqaba Kubra with Takbir — stop Talbiyah at first throw',typ:'wajib',gen:'all',types:'all',note:'أفضل وقت: قبل الزوال — يبدأ من منتصف ليلة النحر'},
+{ar:'ذبح الهدي: شاة أو المشاركة في سبع بدنة أو بقرة',en:'Slaughter Hady: a sheep, or 1/7 share of camel/cow',typ:'wajib',gen:'all',types:'tamattu+qiran'},
+{ar:'الهدي مستحب وليس واجباً لحج الإفراد',en:'Hady is recommended but NOT obligatory for Ifrad',typ:'sunnah',gen:'all',types:'ifrad'},
+{ar:'حلق الرأس كاملاً — الأفضل للرجال',en:'Shave the entire head — preferred for men',typ:'wajib',gen:'men',types:'all'},
+{ar:'تقصير مقدار أنملة من جميع الشعر',en:"Trim a fingertip's length from all hair",typ:'wajib',gen:'women',types:'all'},
+{ar:'التحلل الأول: يحل كل شيء إلا الجماع والطيب',en:'First Tahallul: everything permitted EXCEPT intercourse and perfume',typ:'info',gen:'all',types:'all'},
+{ar:'طواف الإفاضة: ٧ أشواط حول الكعبة — ركن لا يصح الحج بدونه',en:"Tawaf al-Ifadah: 7 rounds — obligatory Pillar of Hajj",typ:'rukn',gen:'all',types:'all'},
+{ar:'السعي: ٧ أشواط بين الصفا والمروة — للمتمتع ولمن لم يسعَ بعد القدوم',en:"Sa'i: 7 legs between Safa & Marwa — for Tamattu' and Ifrad who didn't do Sa'i after Qudum",typ:'wajib',gen:'all',types:'all'},
+{ar:'التحلل الثاني الكامل بعد الطواف والسعي: يحل كل شيء بما فيه الجماع والطيب',en:"Full second Tahallul after Tawaf + Sa'i: ALL things permitted",typ:'info',gen:'all',types:'all'},
+{ar:'العودة إلى منى والمبيت',en:'Return to Mina and spend the night (obligatory)',typ:'wajib',gen:'all',types:'all'},
+],
+11:[
+{ar:'المبيت في منى ليلة الحادي عشر',en:'Spend the 11th night in Mina (obligatory)',typ:'wajib',gen:'all',types:'all'},
+{ar:'رمي الجمرات الثلاث بعد الزوال — الصغرى ثم الوسطى ثم الكبرى',en:'Throw pebbles at 3 Jamarat after noon — Sughra then Wusta then Kubra',typ:'wajib',gen:'all',types:'all'},
+{ar:'٧ حصيات لكل جمرة مع التكبير عند كل حصاة',en:'7 pebbles per Jamara, say Allahu Akbar with each throw',typ:'wajib',gen:'all',types:'all'},
+{ar:'الوقوف والدعاء مستقبلاً القبلة بعد رمي الصغرى والوسطى',en:'Pause and supplicate facing Qibla after Sughra and Wusta',typ:'sunnah',gen:'all',types:'all'},
+{ar:'لا وقوف ولا دعاء بعد الجمرة الكبرى',en:'No pause or supplication after the Kubra',typ:'info',gen:'all',types:'all'},
+],
+12:[
+{ar:'رمي الجمرات الثلاث بعد الزوال — كيوم ١١',en:'Throw pebbles at 3 Jamarat after noon — same as Day 11',typ:'wajib',gen:'all',types:'all'},
+{ar:'النفر الأول (التعجل): الخروج من منى قبل الغروب',en:'Early departure (Nafr al-Awwal): exit Mina BEFORE sunset',typ:'wajib',gen:'all',types:'all',note:'من أدركه الغروب في منى وجب المبيت'},
+{ar:'النفر الثاني (التأخر): المبيت ليلة ١٣ والرمي يوم ١٣',en:'Late departure (Nafr al-Thani): stay for 13th night and Day 13 throwing',typ:'wajib',gen:'all',types:'all'},
+],
+13:[
+{ar:'رمي الجمرات الثلاث بعد الزوال — مثل أيام ١١ و١٢',en:'Throw pebbles at 3 Jamarat after noon — same order as Days 11-12',typ:'wajib',gen:'all',types:'all'},
+{ar:'الخروج من منى إلى مكة بعد الرمي',en:'Leave Mina for Makkah after throwing',typ:'wajib',gen:'all',types:'all'},
+{ar:'طواف الوداع: ٧ أشواط — واجب قبل مغادرة مكة — آخر عهد بالكعبة',en:'Farewell Tawaf: 7 rounds — obligatory before leaving Makkah — final farewell to the Ka\'ba',typ:'wajib',gen:'all',types:'all',note:'صلِّ ركعتين خلف المقام ثم اشرب من زمزم'},
+{ar:'الحائض والنفساء معفوتان من طواف الوداع',en:'Menstruating and postpartum women are EXEMPT from Farewell Tawaf',typ:'info',gen:'women',types:'all'},
+]
+};
+
+const DUAS=[
+{cat:'الإحرام',items:[
+{title:'نية الإحرام — تمتع',ar:'اللَّهُمَّ إِنِّي أُرِيدُ الْحَجَّ فَيَسِّرْهُ لِي وَتَقَبَّلْهُ مِنِّي',en:'O Allah, I intend Hajj — make it easy and accept it from me.',occ:'للمتمتع عند الإحرام بالحج'},
+{title:'نية الإحرام — إفراد',ar:'اللَّهُمَّ إِنِّي أُرِيدُ الْحَجَّ فَيَسِّرْهُ لِي وَتَقَبَّلْهُ مِنِّي وَأَعِنِّي عَلَيْهِ',en:'O Allah, I intend Hajj — make it easy, accept it, and help me.',occ:'لحج الإفراد'},
+{title:'نية الإحرام — قران',ar:'اللَّهُمَّ إِنِّي أُرِيدُ الْحَجَّ وَالْعُمْرَةَ فَيَسِّرْهُمَا لِي وَتَقَبَّلْهُمَا مِنِّي',en:'O Allah, I intend Hajj and Umrah — make them easy and accept them.',occ:'لحج القران'},
+]},
+{cat:'التلبية',items:[
+{title:'التلبية الكاملة',ar:'لَبَّيْكَ اللَّهُمَّ لَبَّيْكَ، لَبَّيْكَ لاَ شَرِيكَ لَكَ لَبَّيْكَ، إِنَّ الْحَمْدَ وَالنِّعْمَةَ لَكَ وَالْمُلْكَ، لاَ شَرِيكَ لَكَ',en:'Labbayk Allahumma labbayk, labbayk la shareeka laka labbayk, innal-hamda wan-ni\'mata laka wal-mulk, la shareeka lak.',occ:'من الإحرام حتى أول حصاة في رمي العقبة — الرجل جهراً والمرأة سراً'},
+]},
+{cat:'دخول مكة',items:[
+{title:'دعاء دخول مكة',ar:'اللَّهُمَّ هَذَا حَرَمُكَ وَأَمْنُكَ، فَحَرِّمْنِي عَلَى النَّارِ، وَأَمِّنِّي مِنْ عَذَابِكَ يَوْمَ تَبْعَثُ عِبَادَكَ، وَاجْعَلْنِي مِنْ أَوْلِيَائِكَ وَأَهْلِ طَاعَتِكَ',en:'O Allah, this is Your sanctuary and security — forbid me to the Fire, protect me from Your punishment on Resurrection Day, and make me among Your allies and obedient servants.',occ:'عند دخول مكة المكرمة'},
+{title:'دعاء رؤية الكعبة أول مرة',ar:'اللَّهُمَّ زِدْ هَذَا الْبَيْتَ تَشْرِيفاً وَتَعْظِيماً وَتَكْرِيماً وَمَهَابَةً، وَزِدْ مَنْ شَرَّفَهُ وَعَظَّمَهُ مِمَّنْ حَجَّهُ أَوِ اعْتَمَرَهُ تَشْرِيفاً وَتَكْرِيماً وَبِرّاً',en:'O Allah, increase this House in honor, reverence, dignity and awe; and increase those who honor it among Hajj and Umrah pilgrims in honor, reverence, and piety.',occ:'عند أول رؤية الكعبة المشرفة — يُكثَر من الدعاء هنا'},
+]},
+{cat:'الطواف',items:[
+{title:'استلام الحجر الأسود',ar:'بِسْمِ اللَّهِ وَاللَّهُ أَكْبَرُ، اللَّهُمَّ إِيمَاناً بِكَ وَتَصْدِيقاً بِكِتَابِكَ وَوَفَاءً بِعَهْدِكَ وَاتِّبَاعاً لِسُنَّةِ نَبِيِّكَ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ',en:'In the name of Allah, Allah is Greatest. O Allah, with faith in You, belief in Your Book, fulfillment of Your covenant, and following the Sunnah of Your Prophet ﷺ.',occ:'عند استلام الحجر أو الإشارة إليه في بداية كل شوط'},
+{title:'بين الركن اليماني والحجر الأسود',ar:'رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ',en:'Our Lord, grant us good in this world and the Hereafter, and protect us from the punishment of the Fire.',occ:'يُقرأ في هذه المسافة في كل شوط'},
+{title:'دعاء الملتزم',ar:'اللَّهُمَّ إِنَّ لَكَ عَلَيَّ حُقُوقاً كَثِيرَةً فِيمَا بَيْنِي وَبَيْنَكَ وَحُقُوقاً كَثِيرَةً فِيمَا بَيْنِي وَبَيْنَ خَلْقِكَ، اللَّهُمَّ مَا كَانَ لَكَ مِنْهَا فَاغْفِرْهُ لِي وَمَا كَانَ لِخَلْقِكَ فَتَحَمَّلْهُ عَنِّي وَأَغْنِنِي بِحَلاَلِكَ عَنْ حَرَامِكَ',en:'O Allah, You have many rights upon me toward You and toward Your creation. Forgive those that are Yours, and take upon Yourself those owed to Your creation, and enrich me with Your lawful so I need not Your forbidden.',occ:'عند الوقوف بالملتزم (بين الحجر الأسود وباب الكعبة)'},
+]},
+{cat:'الصفا والمروة',items:[
+{title:'دعاء الصفا عند الصعود',ar:'اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ وَلِلَّهِ الْحَمْدُ.\nلاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ.\nلاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ، أَنْجَزَ وَعْدَهُ، وَنَصَرَ عَبْدَهُ، وَهَزَمَ الأَحْزَابَ وَحْدَهُ',en:'Allah is Greatest (×3), praise be to Allah.\nNo god but Allah alone, no partner, His is dominion and praise, He is over all things capable.\nNo god but Allah alone — He fulfilled His promise, aided His servant, and defeated the confederates alone.',occ:'على الصفا والمروة في كل شوط عند الصعود'},
+{title:'دعاء زمزم',ar:'اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْماً نَافِعاً وَرِزْقاً وَاسِعاً وَشِفَاءً مِنْ كُلِّ دَاءٍ',en:'O Allah, I ask You for beneficial knowledge, abundant provision, and cure from every illness.',occ:'عند شرب ماء زمزم'},
+]},
+{cat:'عرفة',items:[
+{title:'أفضل دعاء يوم عرفة',ar:'لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ',en:'There is no god but Allah alone, no partner — His is the dominion and praise, and He is over all things capable.',occ:'يُكثَر منه في عرفة — قاله النبي ﷺ أفضل ما قاله هو والأنبياء يوم عرفة'},
+{title:'دعاء عرفة الجامع',ar:'اللَّهُمَّ لَكَ الْحَمْدُ كَالَّذِي نَقُولُ وَخَيْراً مِمَّا نَقُولُ.\nاللَّهُمَّ اغْفِرْ لِي وَلِوَالِدَيَّ وَلِجَمِيعِ الْمُسْلِمِينَ وَالْمُسْلِمَاتِ.\nاللَّهُمَّ إِنِّي أَسْأَلُكَ الْجَنَّةَ وَأَعُوذُ بِكَ مِنَ النَّارِ.\nاللَّهُمَّ أَصْلِحْ لِي دِينِي وَدُنْيَايَ وَآخِرَتِي',en:'O Allah, all praise is Yours as we say and better.\nO Allah, forgive me, my parents, and all Muslims.\nO Allah, I ask for Paradise and seek refuge from the Fire.\nO Allah, rectify my religion, my worldly life, and my Hereafter.',occ:'دعاء جامع في عرفة'},
+{title:'دعاء الانكسار والإنابة',ar:'اللَّهُمَّ إِنَّكَ تَسْمَعُ كَلاَمِي وَتَرَى مَكَانِي وَتَعْلَمُ سِرِّي وَعَلاَنِيَتِي، لاَ يَخْفَى عَلَيْكَ شَيْءٌ مِنْ أَمْرِي.\nأَنَا الْبَائِسُ الْفَقِيرُ الْمُسْتَغِيثُ، أَسْأَلُكَ مَسْأَلَةَ الْمِسْكِينِ، وَأَبْتَهِلُ إِلَيْكَ ابْتِهَالَ الْمُذْنِبِ الذَّلِيلِ',en:'O Allah, You hear my speech, see my place, and know my secret and open affairs — nothing of my matter is hidden from You.\nI am the wretched, poor, pleading servant. I ask You with the asking of the destitute, and entreat You with the pleading of the lowly sinner.',occ:'دعاء خشوع وانكسار بين يدي الله في عرفة'},
+]},
+{cat:'مزدلفة',items:[
+{title:'دعاء المشعر الحرام',ar:'اللَّهُمَّ كَمَا أَوْقَفْتَنَا فِيهِ وَأَرَيْتَنَا إِيَّاهُ، فَوَفِّقْنَا لِذِكْرِكَ كَمَا هَدَيْتَنَا، وَاغْفِرْ لَنَا وَارْحَمْنَا كَمَا وَعَدْتَنَا',en:'O Allah, as You have made us stand here and shown it to us, grant us success in Your remembrance as You guided us, and forgive and have mercy on us as You promised.',occ:'عند الوقوف بالمشعر الحرام قبيل الفجر'},
+]},
+{cat:'رمي الجمرات',items:[
+{title:'دعاء الرمي',ar:'بِسْمِ اللَّهِ، اللَّهُ أَكْبَرُ',en:'In the name of Allah, Allah is the Greatest.',occ:'مع كل حصاة ترميها — ٧ مرات لكل جمرة'},
+{title:'الدعاء بعد الصغرى والوسطى',ar:'اللَّهُمَّ اجْعَلْهُ حَجَّاً مَبْرُوراً وَذَنْباً مَغْفُوراً وَسَعْياً مَشْكُوراً',en:'O Allah, make it an accepted Hajj, a forgiven sin, and a thanked effort.',occ:'بعد الوقوف خلف الجمرة الصغرى والوسطى مستقبلاً القبلة'},
+]},
+{cat:'طواف الوداع',items:[
+{title:'دعاء الوداع',ar:'اللَّهُمَّ الْبَيْتُ بَيْتُكَ وَالْعَبْدُ عَبْدُكَ، حَمَلْتَنِي عَلَى مَا سَخَّرْتَ لِي وَسَيَّرْتَنِي فِي بِلاَدِكَ، حَتَّى بَلَّغْتَنِي بِنِعْمَتِكَ إِلَى بَيْتِكَ وَأَعَنْتَنِي عَلَى أَدَاءِ نُسُكِي.\nفَإِنْ كُنْتَ رَضِيتَ عَنِّي فَازْدَدْ عَنِّي رِضَاً، وَإِلاَّ فَمِنَ الآنَ فَارْضَ عَنِّي قَبْلَ أَنْ تَنْأَى عَنْ بَيْتِكَ دَارِي',en:'O Allah, the House is Yours and the servant is Yours. You carried me upon what You subjected and guided me through Your lands until You delivered me by Your grace to Your House and helped me perform my rites.\nIf You are pleased with me, increase Your pleasure; if not — from this moment be pleased with me before my abode moves away from Your House.',occ:'آخر طواف قبل مغادرة مكة المكرمة'},
+]},
+];
+
+const LEARN=[
+{ico:'🕋',title:'الكعبة المشرفة',sub:'The Sacred House of Allah',body:'<p>الكعبة هي أول بيت وُضع للناس للعبادة، بناها إبراهيم وابنه إسماعيل بأمر الله. ارتفاعها 13.5م وأبعادها 12×10م. الحجر الأسود في ركنها الشرقي يُستلم تبركاً في كل شوط.</p><div class="hl">قال تعالى: ﴿إِنَّ أَوَّلَ بَيْتٍ وُضِعَ لِلنَّاسِ لَلَّذِي بِبَكَّةَ مُبَارَكاً وَهُدًى لِّلْعَالَمِينَ﴾ — آل عمران: 96</div><p>الملتزم: المساحة بين الحجر الأسود وباب الكعبة — من أعظم أماكن استجابة الدعاء. يُستحب التعلق به والبكاء والدعاء.</p><div class="origin">📜 بُنيت الكعبة على قواعد إبراهيم قبل نحو 4000 عام. أعادت قريش بناءها قبيل البعثة. وابن الزبير رضي الله عنه أعادها على القواعد الإبراهيمية.</div>'},
+{ico:'🌙',title:'الحج — الفريضة الخامسة',sub:'The Fifth Pillar of Islam',body:'<p>الحج فريضة على كل مسلم مستطيع مرة في العمر. يجمع أكبر تجمع بشري سنوي على وجه الأرض — أكثر من مليوني حاج في أيام ذي الحجة.</p><div class="hl">قال ﷺ: "الحج المبرور ليس له جزاء إلا الجنة" — رواه البخاري ومسلم</div><p>أنواع الحج: التمتع (الأفضل لغير أهل مكة) — الإفراد (حج فقط) — القران (حج وعمرة في إحرام واحد). لكل نوع خصائصه وأحكامه.</p><div class="origin">📜 فُرض الحج في السنة التاسعة الهجرية. حجّ النبي ﷺ مرة واحدة فقط — حجة الوداع عام 10هـ — علّم فيها الأمة مناسكها كاملة.</div>'},
+{ico:'👘',title:'الإحرام والتلبية',sub:'Sacred State and the Talbiyah',body:'<p>الإحرام: نية الدخول في النسك. للرجل: ثوبان أبيضان غير مخيطين. للمرأة: ثيابها الشرعية الاعتيادية بلا نقاب ولا قفازين.</p><div class="hl">محظورات الإحرام: الطيب، قص الشعر والأظافر، الجماع، صيد البر، عقد النكاح، تغطية رأس الرجل أو وجه المرأة</div><p>التلبية شعار الحاج من الإحرام حتى رمي جمرة العقبة. يجهر بها الرجل ويُسرّها عند الجمع. تعبّر عن الاستجابة لنداء الله.</p><div class="origin">📜 روى ابن عباس: إن إبراهيم نادى في الناس بالحج فأجابه كل من سيحج: لبيك اللهم لبيك — فالتلبية استجابة لهذا النداء الأزلي.</div>'},
+{ico:'🏕️',title:'منى — مدينة الخيام',sub:'The City of Two Million Tents',body:'<p>منى وادٍ مقدس على بعد 5كم شرق المسجد الحرام. يضم نحو مليوني خيمة موسم الحج. يبيت فيها الحجاج ليالي 8 و11 و12 (و13 للمتأخر).</p><div class="hl">أبرز معالمها: الجمرات الثلاث (الصغرى والوسطى والكبرى)، ومسجد الخيف حيث صلّى سبعون نبياً.</div><p>المبيت بمنى واجب — فدية على تاركه بلا عذر. يُجزئ قضاء أكثر الليل فيها.</p><div class="origin">📜 منى المكان الذي أُمر إبراهيم بذبح ابنه فيه فكشف الله عنه — ﴿وَفَدَيْنَاهُ بِذِبْحٍ عَظِيمٍ﴾. ومنها جاء اسم "يوم النحر".</div>'},
+{ico:'☀️',title:'عرفة — الركن الأعظم',sub:'The Pinnacle and Greatest Pillar of Hajj',body:'<p>قال النبي ﷺ: "الحج عرفة". الوقوف فيه ركن يبطل الحج بفواته. وقته: من زوال يوم 9 حتى فجر يوم 10. الأفضل البقاء حتى الغروب.</p><div class="hl">قال ﷺ: "ما من يوم أكثر من أن يُعتق الله فيه عبداً من النار من يوم عرفة" — مسلم</div><p>حدود عرفة معلّمة بعلامات واضحة. نمرة ليست من عرفة — تأكد من الوقوف داخل الحدود الصحيحة.</p><div class="origin">📜 قيل: آدم وحواء التقيا في عرفة فتعارفا — فسُميت عرفة. وقيل: جبريل علّم إبراهيم مناسكها فقال له: "عرفت؟" قال: "عرفت".</div>'},
+{ico:'🌠',title:'مزدلفة — تحت النجوم',sub:'Night Under the Open Sky',body:'<p>مزدلفة بين منى وعرفة. يبيت فيها الحجاج ليلة العيد تحت السماء المفتوحة — يصلون المغرب والعشاء جمعاً قصراً ثم يبيتون ويصلون الفجر.</p><div class="hl">المبيت فيها واجب حتى بعد منتصف الليل. الضعفاء والنساء يغادرون بعد منتصف الليل.</div><p>المشعر الحرام (جبل قزح) في مزدلفة — يُستحب الوقوف عنده والدعاء حتى الإسفار. وهنا يُجمع الحصى للرمي.</p><div class="origin">📜 مزدلفة تعني الاقتراب والتقرب. سُميت "جمعاً" لاجتماع الحجاج فيها. يختم فيها الحاج ليلة عرفة بالدعاء والاستغفار.</div>'},
+{ico:'🪨',title:'رمي الجمرات',sub:'Symbolically Rejecting the Devil',body:'<p>الجمرات ثلاثة: الصغرى، الوسطى، الكبرى (العقبة). يُرمى كل منها بسبع حصيات مع التكبير. ترتيب أيام 11-12-13: الصغرى ← الوسطى (مع الدعاء بعدهما) ← الكبرى (لا وقوف بعدها).</p><div class="hl">يوم 10: الكبرى فقط × 7. أيام 11-12-13: الثلاثة جميعاً × 7 لكل — بعد الزوال.</div><p>حجم الحصاة: حجم الحمصة. لا تجوز الكبيرة ولا التراب. تجوز الاستنابة للعاجز فعلاً.</p><div class="origin">📜 روى ابن عباس: الشيطان تعرض لإبراهيم ثلاث مرات في منى فرماه بالحصى فغاص في الأرض. الرمي تجديد لبراءة النفس من الشيطان.</div>'},
+{ico:'🐑',title:'الهدي والأضحية',sub:'Ibrahim\'s Eternal Sacrifice',body:'<p>الهدي واجب على المتمتع والقارن. الأفضل: إبل > بقر > غنم. يجوز الاشتراك في إبل أو بقر بسبعة. وقته: من رمي العقبة يوم 10 حتى آخر أيام التشريق.</p><div class="hl">من عجز: صام ثلاثة أيام في الحج وسبعة إذا رجع. قال تعالى: ﴿فَمَن تَمَتَّعَ بِالْعُمْرَةِ إِلَى الْحَجِّ فَمَا اسْتَيْسَرَ مِنَ الْهَدْيِ﴾</div><p>يُستحب أن يأكل الحاج من هديه. يجوز التوكيل في الجهات المعتمدة التي تتولى الذبح والتوزيع.</p><div class="origin">📜 ﴿وَفَدَيْنَاهُ بِذِبْحٍ عَظِيمٍ﴾ — الهدي إحياء لذكرى الفداء الإلهي حين نجا إسماعيل بكبش من الجنة. درس أبدي في التسليم لله.</div>'},
+{ico:'🔄',title:'الطواف',sub:'Circling the Divine — Seven Sacred Rounds',body:'<p>الطواف: سبعة أشواط حول الكعبة عكس عقارب الساعة — يبدأ بالحجر الأسود وينتهي به. شروطه: طهارة، ستر عورة، الكعبة عن يسار الطائف.</p><div class="hl">القدوم: سنة للإفراد والقران. الإفاضة: ركن لا يصح الحج بدونه. الوداع: واجب قبل المغادرة.</div><p>الرمَل (الإسراع في الأشواط الثلاثة الأولى) والاضطباع (كشف الكتف الأيمن) سنة للرجل في طواف القدوم فقط.</p><div class="origin">📜 الطواف محاكاة لطواف الملائكة حول العرش. قال ﷺ: "الطواف بالبيت صلاة إلا أن الله أحلّ فيه النطق".</div>'},
+{ico:'🚶',title:'السعي — خطى هاجر الخالدة',sub:'Hajar\'s Eternal Search for Water',body:'<p>السعي: سبعة أشواط بين الصفا والمروة — يبدأ بالصفا (شوط أول) وينتهي بالمروة (شوط سابع). للرجال: الإسراع في مسافة العلمين الأخضرين فقط.</p><div class="hl">الطهارة مستحبة وليست شرطاً. لا يُعاد السعي مرتين في الحج. يصح بعد طواف القدوم أو الإفاضة.</div><p>يُستحب الدعاء أثناء السعي — خاصة على الصفا والمروة. لا قراءة محددة ملزمة — يدعو المرء بما شاء.</p><div class="origin">📜 هاجر سعت بين الجبلين سبع مرات بحثاً عن ماء لرضيعها إسماعيل — فأجرى الله لها زمزم. السعي إحياء لذكراها وتأسٍّ بصبرها وتوكلها الكامل على الله.</div>'},
+];
+
+const FAQ=[
+{cat:'الإحرام',q:'هل يجوز الصابون عديم الرائحة في الإحرام؟',a:'نعم يجوز. الممنوع الطيب المقصود فقط.',madhab:''},
+{cat:'الإحرام',q:'ما الفدية عند انتهاك محظور؟',a:'على التخيير: ذبح شاة، أو صيام ثلاثة أيام، أو إطعام ستة مساكين. تؤدى في أي مكان.',madhab:''},
+{cat:'الإحرام',q:'هل يؤثر النسيان في وجوب الفدية؟',a:'لا إثم على الناسي. لكن الجمهور يوجبون الفدية مع النسيان. الحنابلة يسقطونها على الناسي في بعض المحظورات.',madhab:'خلاف — الأحوط إخراج الفدية'},
+{cat:'الإحرام',q:'هل يجوز التظليل بمظلة في الإحرام؟',a:'نعم. التظليل بالمظلة أو سقف السيارة جائز بلا فدية لأنه ليس لبساً.',madhab:''},
+{cat:'الإحرام',q:'متى يقطع الحاج التلبية؟',a:'المتمتع: عند الشروع في طواف الإفاضة. المفرد والقارن: عند أول حصاة في رمي العقبة.',madhab:''},
+{cat:'الطواف والسعي',q:'هل تشترط الطهارة لصحة الطواف؟',a:'الجمهور يشترطونها شرط صحة. ابن تيمية يرى أنها واجبة وليست شرط صحة.',madhab:'مالك وشافعي وحنبل: شرط صحة — حنفية: واجب لا ركن'},
+{cat:'الطواف والسعي',q:'ما الحكم إن شك في عدد الأشواط؟',a:'يبني على اليقين (الأقل) ويأتي بالشوط الناقص.',madhab:''},
+{cat:'الطواف والسعي',q:'هل يصح طواف الحائض؟',a:'لا يصح عند الجمهور. باقي المناسك تصح منها. إذا طهرت قبل المغادرة طافت.',madhab:'ابن تيمية وابن حزم: يصح للضرورة'},
+{cat:'الطواف والسعي',q:'هل يجوز السعي قبل الطواف؟',a:'لا — يجب أن يسبق السعيَ طوافٌ صحيح (قدوم أو إفاضة).',madhab:''},
+{cat:'الطواف والسعي',q:'هل الرمل والاضطباع في كل طواف؟',a:'سنة مختصة بطواف القدوم للرجال فقط — لا في الإفاضة ولا الوداع.',madhab:''},
+{cat:'عرفة ومزدلفة',q:'ما الحكم إن فات الوقوف بعرفة؟',a:'يُفسد الحج بالاتفاق. يجب التحلل بعمرة وقضاء الحج من العام القابل إن كان فريضة.',madhab:''},
+{cat:'عرفة ومزدلفة',q:'ما وقت الوقوف بعرفة بالضبط؟',a:'من زوال يوم التاسع حتى فجر يوم النحر (العاشر). من أدرك لحظة واحدة في هذا الوقت صح حجه.',madhab:'الحنابلة: يجوز من فجر التاسع'},
+{cat:'عرفة ومزدلفة',q:'هل نمرة من عرفة؟',a:'صحن مسجد نمرة ليس من عرفة. الوقوف يجب داخل الحدود المعلّمة.',madhab:''},
+{cat:'عرفة ومزدلفة',q:'هل يجب البقاء في مزدلفة حتى الفجر؟',a:'الواجب المبيت فيها. من جاز به منتصف الليل فيها وغادر فقد أدى الواجب.',madhab:''},
+{cat:'الجمرات',q:'ما وقت رمي أيام التشريق؟',a:'الأفضل بعد الزوال حتى الغروب. يجوز بعد الغروب حتى الفجر للضرورة عند أكثر العلماء.',madhab:''},
+{cat:'الجمرات',q:'هل يجوز الرمي قبل الزوال في أيام التشريق؟',a:'الجمهور يشترطون الزوال. بعض العلماء المعاصرين أجازوه للضرورة.',madhab:'الأحوط الانتظار حتى الزوال'},
+{cat:'الجمرات',q:'ما حجم الحصاة المناسبة؟',a:'حجم الحمصة أو نواة التمر. لا تجوز الكبيرة ولا التراب.',madhab:''},
+{cat:'الجمرات',q:'هل تجوز الاستنابة في الرمي؟',a:'تجوز للعاجز فعلاً. النائب يرمي عن نفسه أولاً ثم عن موكله في كل جمرة.',madhab:''},
+{cat:'الجمرات',q:'من نسي رمي يوم كامل؟',a:'يقضيه في أيام التشريق مرتباً. إن انقضت أيام التشريق وجبت الفدية (شاة).',madhab:''},
+{cat:'أحكام النساء',q:'هل تحتاج المرأة لمحرم في الحج؟',a:'الجمهور يشترطون المحرم. المالكية يجيزون مع نساء ثقات. كثير من المعاصرين أجازوا مع المجموعات المنظمة.',madhab:'خلاف معتبر — الأحوط وجود المحرم'},
+{cat:'أحكام النساء',q:'هل تجهر المرأة بالتلبية؟',a:'تُسرّ بحيث تسمعها وحدها — لا تجهر أمام الرجال.',madhab:''},
+{cat:'أحكام النساء',q:'ما حكم الحائض في طواف الإفاضة؟',a:'تنتظر الطهر عند الجمهور. إن اضطرت للسفر ففيه خلاف — استفتِ قبل السفر.',madhab:'ابن تيمية: يجوز للضرورة — الجمهور: لا'},
+{cat:'أحكام النساء',q:'هل تسرع المرأة بين العلمين الأخضرين؟',a:'لا — الإسراع سنة للرجل فقط. المرأة تمشي بخطى عادية في كل السعي.',madhab:''},
+{cat:'أحكام النساء',q:'أين تستلم المرأة الحجر الأسود؟',a:'لا تزاحم في الحجر — تشير إليه من بعيد. إن وجدت فرصة بلا زحام (كآخر الليل) جاز الاستلام.',madhab:''},
+{cat:'أحكام عامة',q:'ما الفرق بين ركن الحج وواجبه وسنته؟',a:'الركن: لا يسقط بعذر ولا بدم — فواته يبطل الحج. الواجب: تركه يوجب الفدية وإلا صح الحج. السنة: تركها بلا شيء.',madhab:''},
+{cat:'أحكام عامة',q:'هل يصح الحج بالنيابة عن الميت؟',a:'نعم يصح عن الميت وعن العاجز عجزاً مستمراً. يُشترط أن يكون النائب قد حج عن نفسه أولاً.',madhab:''},
+{cat:'أحكام عامة',q:'هل الجماع قبل التحلل الأول يفسد الحج؟',a:'نعم يُفسده ويوجب إتمامه والقضاء من العام القابل وكفارة بدنة.',madhab:''},
+{cat:'أحكام عامة',q:'ما حكم من فاته طواف الوداع؟',a:'عليه فدية (شاة). الحائض والنفساء معفوتان. من أدى الوداع ثم مكث طويلاً يُعيد الطواف.',madhab:''},
+{cat:'أحكام عامة',q:'هل يُصلي المسافر في الحرم جمعاً وقصراً؟',a:'المسافر يقصر خلف المقيم وتصح صلاته. من كان مقيماً يُتمّ صلاته.',madhab:''},
+];
 
 // ============================================================
-// WAKE LOCK API (Prevents screen from sleeping)
+// STATE & PERSISTENCE
+// ============================================================
+const state={
+  name:'',gender:'male',hajjType:'tamattu',currentDay:8,currentPage:'dashboard',
+  theme:'dark', fontScale:1,
+  completedSteps:{8:[],9:[],10:[],11:[],12:[],13:[]},
+  counters:{
+    tawafQudum:{rounds:0,lapTimes:[],lapStart:null},
+    tawafIfadah:{rounds:0,lapTimes:[],lapStart:null},
+    tawafWada:{rounds:0,lapTimes:[],lapStart:null},
+    sai:{rounds:0,lapTimes:[],lapStart:null},
+    pebbles:0,
+    jamarat:{10:{kubra:0},11:{sughra:0,wusta:0,kubra:0},12:{sughra:0,wusta:0,kubra:0},13:{sughra:0,wusta:0,kubra:0}}
+  },
+  sessionStart:null,log:[]
+};
+
+function save(){try{localStorage.setItem('hajj_v5',JSON.stringify(state));}catch(e){}}
+function load(){
+  try{
+    const d=JSON.parse(localStorage.getItem('hajj_v5')) || JSON.parse(localStorage.getItem('hajj_v4'));
+    if(d&&d.name){
+      Object.assign(state,d);
+      if(!state.theme) state.theme='dark';
+      if(!state.fontScale) state.fontScale=1;
+      return true;
+    }
+  }catch(e){}
+  return false;
+}
+
+function addLog(m){const t=new Date().toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});state.log.unshift({t,m});if(state.log.length>60)state.log.pop();save();}
+
+// Enhanced Haptic/Visual Feedback
+function haptic(ms){
+  try{navigator.vibrate(ms||40);}catch(e){}
+  // Visual fallback for iOS
+  const fl = document.getElementById('flashOverlay');
+  if(fl) {
+    fl.style.opacity = '0.12';
+    setTimeout(() => { fl.style.opacity = '0'; }, 150);
+  }
+}
+
+// ============================================================
+// THEME & FONT RESIZER
+// ============================================================
+function applyTheme() {
+  document.body.classList.toggle('light', state.theme === 'light');
+  document.getElementById('themeBtn').textContent = state.theme === 'light' ? '🌙' : '☀️';
+  document.getElementById('metaThemeColor').setAttribute('content', state.theme === 'light' ? '#F5F2EB' : '#091A10');
+}
+function toggleTheme() {
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  applyTheme();
+  save();
+}
+function changeFontSize(step) {
+  state.fontScale = Math.max(0.8, Math.min(1.6, state.fontScale + step));
+  document.documentElement.style.setProperty('--f-scale', state.fontScale);
+  save();
+}
+
+// ============================================================
+// WAKE LOCK API (Keeps screen awake)
 // ============================================================
 let wakeLock = null;
-
 async function requestWakeLock() {
   try {
-    if ('wakeLock' in navigator) {
+    if ('wakeLock' in navigator && wakeLock === null) {
       wakeLock = await navigator.wakeLock.request('screen');
-      console.log('Screen Wake Lock is active ✅');
     }
-  } catch (err) {
-    console.warn(`Wake Lock error: ${err.name}, ${err.message}`);
-  }
+  } catch (err) {}
 }
-
 function releaseWakeLock() {
   if (wakeLock !== null) {
-    wakeLock.release().then(() => { 
-      wakeLock = null; 
-      console.log('Screen Wake Lock released 🔴'); 
-    });
+    wakeLock.release().then(() => { wakeLock = null; });
   }
 }
-
-// Re-request wake lock if user switches apps and comes back
-document.addEventListener('visibilitychange', async () => {
-  if (wakeLock !== null && document.visibilityState === 'visible' && umrahStartTime && !isPaused) {
-    await requestWakeLock();
-  }
-});
-
-// ============================================================
-// STEP DATA 
-// ============================================================
-const STEPS=[{title:"الإحرام",titleEn:"Ihram",subtitle:"الركن الأول — النية والتلبية",subtitleEn:"First Pillar — Intention & Talbiyah",sections:[{type:"text",title:"التعريف",titleEn:"Definition",icon:"📖",content:"الإحرام هو نية الدخول في النسك وهو ركن من أركان العمرة. يكون من الميقات المحدد حسب جهة القدوم.",contentEn:"Ihram is the intention to enter the state of ritual worship, beginning at the designated Miqat."},{type:"checklist",title:"سُنن ما قبل الإحرام",titleEn:"Recommended Acts Before Ihram",icon:"✨",items:[{ar:"الاغتسال والتنظّف وتقليم الأظافر",en:"Perform ghusl, clean yourself, trim nails"},{ar:"التطيّب في البدن قبل النية — للرجال فقط",en:"Apply perfume to body — men only",gender:"male"},{ar:"لبس إزار ورداء أبيضان نظيفان",en:"Wear two white unstitched Ihram cloths",gender:"male"},{ar:"لبس ملابس ساترة غير متبرجة",en:"Wear modest, non-revealing clothing",gender:"female"},{ar:"صلاة ركعتين سنة الإحرام",en:"Pray two rak'ahs of Sunnah"},{ar:"عقد النية والتلبية عند الميقات",en:"Make intention and Talbiyah at the Miqat"}]},{type:"dua",label:"التلبية الكاملة",labelEn:"The Full Talbiyah",arabic:"لَبَّيْكَ اللَّهُمَّ لَبَّيْكَ، لَبَّيْكَ لَا شَرِيكَ لَكَ لَبَّيْكَ، إِنَّ الْحَمْدَ وَالنِّعْمَةَ لَكَ وَالْمُلْكَ، لَا شَرِيكَ لَكَ",translationEn:"Here I am O Allah. You have no partner. All praise, grace, and sovereignty belong to You."},{type:"dua",label:"دعاء السفر",labelEn:"Travel Supplication",arabic:"سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ وَإِنَّا إِلَى رَبِّنَا لَمُنقَلِبُونَ، اللَّهُمَّ هَوِّنْ عَلَيْنَا سَفَرَنَا هَذَا وَاطْوِ عَنَّا بُعْدَهُ",translationEn:"Glory be to Him who subjected this to us. O Allah, ease our travel and fold its distance."},{type:"warn",content:"⛔ محظورات الإحرام: لبس المخيط وتغطية الرأس والتطيّب وقص الشعر والأظافر والصيد وعقد النكاح والجماع.",contentEn:"⛔ Ihram prohibitions: stitched clothing (men), covering head (men), perfume, cutting hair/nails, hunting, marriage, intimacy.",gender:"male"},{type:"warn",content:"⛔ محظورات الإحرام للنساء: التطيّب وقص الشعر والأظافر والصيد وعقد النكاح والجماع ولبس النقاب والقفازين.",contentEn:"⛔ Ihram prohibitions for women: perfume, cutting hair/nails, hunting, marriage, intimacy, niqab and gloves. Modest clothing and head covering ARE allowed.",gender:"female"}]},{title:"دخول المسجد الحرام",titleEn:"Entering Al-Masjid Al-Haram",subtitle:"آداب الدخول والأدعية",subtitleEn:"Etiquettes & Supplications",sections:[{type:"dua",label:"دعاء دخول المسجد",labelEn:"Entering the mosque",arabic:"بِسْمِ اللَّهِ، وَالصَّلَاةُ وَالسَّلَامُ عَلَى رَسُولِ اللَّهِ، اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ",translationEn:"In the name of Allah, peace upon the Messenger. O Allah, open for me the gates of Your mercy."},{type:"dua",label:"دعاء رؤية الكعبة",labelEn:"Upon seeing the Ka'bah",arabic:"اللَّهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ فَحَيِّنَا رَبَّنَا بِالسَّلَامِ، اللَّهُمَّ زِدْ هَذَا الْبَيْتَ تَشْرِيفًا وَتَعْظِيمًا وَتَكْرِيمًا وَمَهَابَةً",translationEn:"O Allah, You are Peace. Increase this House in honor and reverence."},{type:"dua",label:"دعاء العفو والعافية",labelEn:"Du'a for pardon",arabic:"اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ، اللَّهُمَّ اسْتُرْ عَوْرَاتِي وَآمِنْ رَوْعَاتِي وَاحْفَظْنِي مِنْ بَيْنِ يَدَيَّ وَمِنْ خَلْفِي وَعَنْ يَمِينِي وَعَنْ شِمَالِي وَمِنْ فَوْقِي",translationEn:"O Allah, I ask for pardon and well-being. Cover my faults, calm my fears, protect me from every direction."},{type:"note",content:"عند رؤية الكعبة لأول مرة — موضع عظيم للإجابة.",contentEn:"Upon first seeing the Ka'bah — a great moment for answered prayers."}]},{title:"الطواف",titleEn:"Tawaf",subtitle:"الركن الثاني — سبعة أشواط",subtitleEn:"Second Pillar — Seven circuits",sections:[{type:"text",title:"كيفية الطواف",titleEn:"How to Perform Tawaf",icon:"🕋",content:"سبعة أشواط حول الكعبة. يبدأ من الحجر الأسود. الكعبة عن يسارك. يُشترط الطهارة.",contentEn:"Seven circuits around the Ka'bah. Start at the Black Stone. Keep Ka'bah to your left. Purity required."},{type:"checklist",title:"سُنن الطواف",titleEn:"Recommended Acts",icon:"✨",items:[{ar:"الاضطباع: كشف الكتف الأيمن",en:"Idtiba': uncover right shoulder",gender:"male"},{ar:"الرَّمَل: الإسراع في الأشواط الثلاثة الأولى",en:"Raml: brisk walk in first 3 circuits",gender:"male"},{ar:"استلام الحجر الأسود أو الإشارة إليه مع التكبير",en:"Touch/kiss Black Stone or point with Takbir"},{ar:"الدعاء بين الركن اليماني والحجر الأسود",en:"Supplicate between Yemeni Corner and Black Stone"}]},{type:"dua",label:"عند الحجر الأسود",labelEn:"At the Black Stone",arabic:"بِسْمِ اللَّهِ، اللَّهُ أَكْبَرُ",translationEn:"In the name of Allah, Allah is the Greatest"},{type:"dua",label:"أدعية الطواف",labelEn:"Tawaf supplications",arabic:"سُبْحَانَ اللَّهِ وَالْحَمْدُ لِلَّهِ وَلَا إِلَهَ إِلَّا اللَّهُ وَاللَّهُ أَكْبَرُ وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ",translationEn:"Glory, praise, no god but Allah, Allah is Greatest, no power except with Allah."},{type:"dua",label:"دعاء جامع",labelEn:"Comprehensive",arabic:"رَبِّ اغْفِرْ لِي وَارْحَمْنِي وَاهْدِنِي وَعَافِنِي وَارْزُقْنِي",translationEn:"My Lord, forgive, have mercy, guide, grant well-being, and provide for me."},{type:"dua",label:"بين الركن اليماني والحجر الأسود",labelEn:"Between Yemeni Corner & Black Stone (confirmed Sunnah)",arabic:"رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ",translationEn:"Our Lord, give us good in this world and the Hereafter, protect us from the Fire."},{type:"counter",id:"tawaf",title:"عدّاد أشواط الطواف",titleEn:"Tawaf Counter",label:"شوط",labelEn:"circuit",max:7},{type:"dua",label:"بعد ركعتي الطواف وشرب زمزم",labelEn:"After 2 rak'ahs & Zamzam",arabic:"اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي، اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا وَرِزْقًا وَاسِعًا وَشِفَاءً مِنْ كُلِّ دَاءٍ",translationEn:"O Allah, You love to pardon, so pardon me. I ask for beneficial knowledge, abundant provision, and healing."}]},{title:"السعي",titleEn:"Sa'i",subtitle:"الركن الثالث — سبعة أشواط",subtitleEn:"Third Pillar — Seven laps",sections:[{type:"text",title:"كيفية السعي",titleEn:"How to Perform Sa'i",icon:"🏃",content:"سبعة أشواط بين الصفا والمروة. يبدأ من الصفا وينتهي بالمروة.",contentEn:"Seven laps between Safa and Marwah. Start at Safa, end at Marwah."},{type:"quran",label:"عند الصعود على الصفا",labelEn:"Upon ascending Safa (Quran 2:158)",arabic:"إِنَّ الصَّفَا وَالْمَرْوَةَ مِن شَعَائِرِ اللَّهِ ۖ فَمَنْ حَجَّ الْبَيْتَ أَوِ اعْتَمَرَ فَلَا جُنَاحَ عَلَيْهِ أَن يَطَّوَّفَ بِهِمَا ۚ وَمَن تَطَوَّعَ خَيْرًا فَإِنَّ اللَّهَ شَاكِرٌ عَلِيمٌ",translation:"سورة البقرة ١٥٨ — ثم: أبدأ بما بدأ الله به",translationEn:"Indeed, Safa and Marwah are among the symbols of Allah... Then say: I begin with what Allah began with."},{type:"dua",label:"الذكر على الصفا والمروة — ٣ مرات",labelEn:"Dhikr on Safa & Marwah — 3 times",arabic:"اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ\n\nلَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ يُحْيِي وَيُمِيتُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ\n\nلَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ أَنْجَزَ وَعْدَهُ وَنَصَرَ عَبْدَهُ وَهَزَمَ الْأَحْزَابَ وَحْدَهُ",translationEn:"Allah is the Greatest (×3). No god but Allah alone. His is sovereignty and praise. He gives life and death. He fulfilled His promise, supported His servant, defeated the confederates alone."},{type:"dua",label:"عند الهرولة",labelEn:"During brisk walk between green markers",arabic:"رَبِّ اغْفِرْ وَارْحَمْ وَأَنْتَ الْأَعَزُّ الْأَكْرَمُ",translationEn:"My Lord, forgive and have mercy. You are the Most Mighty, Most Noble."},{type:"counter",id:"saei",title:"عدّاد أشواط السعي",titleEn:"Sa'i Counter",label:"شوط",labelEn:"lap",max:7}]},{title:"الحلق أو التقصير",titleEn:"Shaving / Trimming",subtitle:"واجب العمرة — الإحلال",subtitleEn:"Obligation — Exiting Ihram",sections:[{type:"text",title:"الحلق والتقصير",titleEn:"Shaving & Trimming",icon:"✂️",content:"يحلق الرجل أو يقصّر. الحلق أفضل.",contentEn:"Shave the entire head or trim. Shaving is preferred (the Prophet ﷺ supplicated 3 times for shavers, once for trimmers).",gender:"male"},{type:"text",title:"التقصير",titleEn:"Trimming",icon:"✂️",content:"تقصّ المرأة من أطراف شعرها قدر أنملة (طرف الإصبع). لا تحلق المرأة رأسها.",contentEn:"Trim a fingertip's length from the ends of your hair. Women never shave their heads.",gender:"female"},{type:"text",title:"الإحلال الكامل",titleEn:"Full Release",icon:"🎉",content:"تمّت العمرة بحمد الله! يحلّ لك كل محظورات الإحرام.",contentEn:"Your Umrah is complete! All Ihram prohibitions are lifted."},{type:"dua",label:"دعاء ختام العمرة",labelEn:"Du'a upon completion",arabic:"اللَّهُمَّ تَقَبَّلْ مِنِّي إِنَّكَ أَنْتَ السَّمِيعُ الْعَلِيمُ وَتُبْ عَلَيَّ إِنَّكَ أَنْتَ التَّوَّابُ الرَّحِيمُ\n\nاللَّهُمَّ لَا تَجْعَلْهُ آخِرَ الْعَهْدِ مِنْ بَيْتِكَ الْحَرَامِ",translationEn:"O Allah, accept from me. Do not make this my last visit to Your Sacred House."}]},{title:"أدعية عامة",titleEn:"General Supplications",subtitle:"أدعية جامعة في أي وقت",subtitleEn:"Anytime du'as",sections:[{type:"dua",label:"سيد الاستغفار",labelEn:"Master of Seeking Forgiveness",arabic:"اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",translationEn:"O Allah, You are my Lord. You created me and I am Your servant. I abide by Your covenant. I seek refuge from the evil I've done. Forgive me, none forgives but You."},{type:"dua",label:"الصلاة الإبراهيمية",labelEn:"Abrahamic Prayer",arabic:"اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ كَمَا صَلَّيْتَ عَلَى إِبْرَاهِيمَ وَعَلَى آلِ إِبْرَاهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ، اللَّهُمَّ بَارِكْ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ كَمَا بَارَكْتَ عَلَى إِبْرَاهِيمَ وَعَلَى آلِ إِبْرَاهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ",translationEn:"O Allah, send grace upon Muhammad as upon Ibrahim. Bless Muhammad as You blessed Ibrahim. You are Praiseworthy, Glorious."},{type:"dua",label:"دعاء للوالدين",labelEn:"Du'a for parents",arabic:"رَبِّ ارْحَمْهُمَا كَمَا رَبَّيَانِي صَغِيرًا\n\nاللَّهُمَّ احْفَظْ أَهْلِي وَذُرِّيَّتِي وَبَارِكْ لِي فِيهِمْ",translationEn:"My Lord, have mercy on them as they raised me. O Allah, protect my family and bless me in them."}]}];
-
-// ============================================================
-// STATE
-// ============================================================
-let completedSteps = new Set();
-let counters = { tawaf: 0, saei: 0 };
-let counterLogs = { tawaf: [], saei: [] };
-let umrahStartTime = null;
-let elapsedInterval = null;
-let activityLog = [];
-let currentLang = 'both';
-let checkedItems = {};
-let userName = '';
-let userGender = '';
-let isPaused = false;
-let totalPausedMs = 0;
-let pauseStartTime = null;
-const SESSION_ID = 'umrah-' + Date.now().toString(36);
-
-// ============================================================
-// ONBOARDING
-// ============================================================
-let selectedGender = '';
-
-window.selectGender = function(g, el) {
-  selectedGender = g;
-  document.querySelectorAll('.ob-gender-btn').forEach(b => b.classList.remove('selected'));
-  el.classList.add('selected');
-  checkOnboardReady();
-};
-
-document.getElementById('obName').addEventListener('input', checkOnboardReady);
-
-function checkOnboardReady() {
-  const name = document.getElementById('obName').value.trim();
-  document.getElementById('obStartBtn').disabled = !(name && selectedGender);
-}
-
-window.completeOnboarding = function() {
-  userName = document.getElementById('obName').value.trim();
-  userGender = selectedGender;
-  if (!userName || !userGender) return;
-
-  haptic(100);
-  document.getElementById('onboardOverlay').classList.remove('show');
-
-  // Apply gender class to body
-  document.body.classList.add('user-' + userGender);
-
-  // Show user badge
-  document.getElementById('ubName').textContent = userName;
-  document.getElementById('ubIcon').textContent = userGender === 'male' ? '🧔' : '🧕';
-  document.getElementById('userBadge').classList.add('show');
-
-  // Start Umrah
-  umrahStartTime = now();
-  applyStartedUI();
-  addLog('start', 'start', `${userName} (${userGender}) — Umrah Started | بدأت العمرة`);
-
-  // Activate Wake Lock
-  requestWakeLock();
-
-  // Re-render to apply gender filtering
-  applyGenderFilter();
-  setLang(currentLang);
-};
-
-function applyGenderFilter() {
-  document.querySelectorAll('[data-gender]').forEach(el => {
-    const g = el.dataset.gender;
-    if (g && g !== userGender && userGender) {
-      el.style.display = 'none';
-    } else {
-      el.style.display = '';
-    }
-  });
-}
-
-// ============================================================
-// PAUSE / RESUME
-// ============================================================
-window.togglePause = function() {
-  if (!umrahStartTime) return;
-  haptic(60);
-
-  if (isPaused) {
-    // Resume
-    const pausedDuration = now() - pauseStartTime;
-    totalPausedMs += pausedDuration;
-    pauseStartTime = null;
-    isPaused = false;
-    document.getElementById('pauseBtnText').textContent = '⏸ Pause | إيقاف مؤقت';
-    document.getElementById('pauseBtn').classList.remove('paused');
-    document.getElementById('pausedLabel').classList.remove('show');
-    addLog('step', 'start', `Resumed — استئناف (paused for ${fmtDuration(pausedDuration)})`);
-    
-    // Restart elapsed timer
-    elapsedInterval = setInterval(() => {
-      document.getElementById('elapsedTime').textContent = getActiveTime();
-    }, 1000);
-    
-    // Resume wake lock
+document.addEventListener('visibilitychange', () => {
+  if (wakeLock !== null && document.visibilityState === 'visible') {
     requestWakeLock();
-  } else {
-    // Pause
-    pauseStartTime = now();
-    isPaused = true;
-    document.getElementById('pauseBtnText').textContent = '▶ Resume | استئناف';
-    document.getElementById('pauseBtn').classList.add('paused');
-    document.getElementById('pausedLabel').classList.add('show');
-    addLog('step', 'complete', 'Paused — إيقاف مؤقت (e.g. Salah)');
-    
-    if (elapsedInterval) { clearInterval(elapsedInterval); elapsedInterval = null; }
-    
-    // Release wake lock to save battery
-    releaseWakeLock();
-  }
-  saveState();
-};
-
-function getActiveTime() {
-  if (!umrahStartTime) return '--';
-  const total = now() - umrahStartTime;
-  const currentPause = isPaused && pauseStartTime ? (now() - pauseStartTime) : 0;
-  return fmtDuration(total - totalPausedMs - currentPause);
-}
-
-function sinceStart() { return getActiveTime(); }
-
-// ============================================================
-// HAPTIC FEEDBACK
-// ============================================================
-function haptic(ms = 50) {
-  try { if (navigator.vibrate) navigator.vibrate(ms); } catch(e) {}
-}
-
-// ============================================================
-// LOCALSTORAGE PERSISTENCE
-// ============================================================
-const STORAGE_KEY = 'umrah_guide_state';
-
-function saveState() {
-  try {
-    const state = {
-      completedSteps: Array.from(completedSteps),
-      counters,
-      counterLogs: {
-        tawaf: counterLogs.tawaf.map(l => ({ ...l, time: l.time.toISOString() })),
-        saei: counterLogs.saei.map(l => ({ ...l, time: l.time.toISOString() }))
-      },
-      umrahStartTime: umrahStartTime ? umrahStartTime.toISOString() : null,
-      activityLog,
-      checkedItems,
-      currentLang,
-      userName,
-      userGender,
-      isPaused,
-      totalPausedMs,
-      pauseStartTime: pauseStartTime ? pauseStartTime.toISOString() : null,
-      sessionId: SESSION_ID,
-      savedAt: new Date().toISOString()
-    };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  } catch(e) { console.warn('Could not save state:', e); }
-}
-
-function loadState() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    return JSON.parse(raw);
-  } catch(e) { return null; }
-}
-
-function clearState() {
-  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
-}
-
-// ============================================================
-// HELPERS
-// ============================================================
-function now() { return new Date(); }
-function fmtTime(d) { return d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true}); }
-function fmtDate(d) { return d.toLocaleDateString('en-US',{weekday:'short',year:'numeric',month:'short',day:'numeric'}); }
-function fmtDateTime(d) { return fmtDate(d)+' '+fmtTime(d); }
-function fmtDuration(ms) { const s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60; return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`; }
-
-// ============================================================
-// LIVE CLOCK
-// ============================================================
-function updateClock() { const n=now(); document.getElementById('liveClock').textContent=fmtTime(n); document.getElementById('liveDate').textContent=fmtDate(n); }
-setInterval(updateClock, 1000);
-updateClock();
-
-// ============================================================
-// OFFLINE DETECTION
-// ============================================================
-window.addEventListener('offline', () => document.getElementById('offlineBar').classList.add('show'));
-window.addEventListener('online', () => {
-  document.getElementById('offlineBar').classList.remove('show');
-  const bar = document.getElementById('onlineBar');
-  bar.style.display = 'block';
-  setTimeout(() => bar.style.display = 'none', 3000);
-});
-
-// ============================================================
-// PWA INSTALL PROMPT
-// ============================================================
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  document.getElementById('installPrompt').classList.add('show');
-});
-document.getElementById('installBtn').addEventListener('click', async () => {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    await deferredPrompt.userChoice;
-    deferredPrompt = null;
-    document.getElementById('installPrompt').classList.remove('show');
   }
 });
 
 // ============================================================
-// ACTIVITY LOG
+// HIJRI DATE
 // ============================================================
-function addLog(type, tag, activity) {
-  const t = now();
-  const dur = umrahStartTime ? fmtDuration(t-umrahStartTime) : '00:00:00';
-  activityLog.push({ time: fmtTime(t), date: fmtDate(t), type: tag, activity, duration: dur, raw: t.toISOString() });
-  renderLog();
-  saveState();
+function hijriDate(d){
+d=d||new Date();
+const Y=d.getFullYear(),M=d.getMonth()+1,D=d.getDate();
+let a=Math.floor((14-M)/12),y=Y+4800-a,m=M+12*a-3;
+let jd=D+Math.floor((153*m+2)/5)+365*y+Math.floor(y/4)-Math.floor(y/100)+Math.floor(y/400)-32045;
+let l=jd-1948440+10632,n=Math.floor((l-1)/10631);
+l-=10631*n-354;
+let j=(Math.floor((10985-l)/5316))*(Math.floor((50*l)/17719))+(Math.floor(l/5670))*(Math.floor((43*l)/15238));
+l-=(Math.floor((30-j)/15))*(Math.floor((17719*j)/50))+(Math.floor(j/16))*(Math.floor((15238*j)/43))-29;
+const hm=Math.floor((24*l)/709),hd=l-Math.floor((709*hm)/24),hy=30*n+j-30;
+const mAr=['محرم','صفر','ربيع الأول','ربيع الثاني','جمادى الأولى','جمادى الثانية','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
+return{y:hy,m:hm,d:hd,mAr:mAr[hm-1]||''};
 }
-
-function renderLog() {
-  const tbody = document.getElementById('logTableBody');
-  tbody.innerHTML = '';
-  activityLog.forEach((l,i) => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${i+1}</td><td>${l.time}</td><td><span class="log-tag ${l.type}">${l.type}</span></td><td>${l.activity}</td><td>${l.duration}</td>`;
-    tbody.appendChild(tr);
-  });
-  document.getElementById('logCount').textContent = activityLog.length + ' entries';
-}
-
-function exportLog() {
-  let text = '=== UMRAH ACTIVITY LOG ===\n';
-  if (userName) text += 'Name: '+userName+' ('+userGender+')\n';
-  if (umrahStartTime) text += 'Started: '+fmtDateTime(umrahStartTime)+'\n';
-  if (totalPausedMs > 0) text += 'Total Paused: '+fmtDuration(totalPausedMs)+'\n';
-  text += 'Exported: '+fmtDateTime(now())+'\n\n';
-  text += '#\tTime\tType\tActivity\tElapsed\n'+'─'.repeat(60)+'\n';
-  activityLog.forEach((l,i) => { text += `${i+1}\t${l.time}\t${l.type}\t${l.activity}\t${l.duration}\n`; });
-  if (completedSteps.size===STEPS.length) text += '\n✅ UMRAH COMPLETED — Total: '+sinceStart()+'\n';
-  text += '\nعمرة مبرورة وذنب مغفور\n';
-  const blob = new Blob([text],{type:'text/plain;charset=utf-8'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'umrah-log-'+now().toISOString().slice(0,10)+'.txt';
-  a.click();
-  haptic(100);
+function updateHeader(){
+const h=hijriDate();
+document.getElementById('hHijri').textContent=h.d+' '+h.mAr+' '+h.y+' هـ';
+document.getElementById('hGreg').textContent=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+document.getElementById('hName').textContent=state.name||'الحاج';
+const tp={tamattu:'حج التمتع',ifrad:'حج الإفراد',qiran:'حج القران'};
+const gn={male:'أخ',female:'أخت'};
+document.getElementById('hType').textContent=(gn[state.gender]||'')+' • '+(tp[state.hajjType]||'');
 }
 
 // ============================================================
-// GOOGLE SHEETS SYNC
+// DASHBOARD
 // ============================================================
-async function syncToCloud() {
-  if (!GOOGLE_SCRIPT_URL) {
-    alert('Google Sheets URL not configured.\n\nSet GOOGLE_SCRIPT_URL in the script section of index.html.\n\nSee google-apps-script.js for setup instructions.');
-    return;
-  }
-  const syncEl = document.getElementById('syncStatus');
-  syncEl.className = 'sync-status syncing';
-  syncEl.textContent = '☁️ Syncing...';
-
-  try {
-    const payload = {
-      sessionId: SESSION_ID,
-      userName: userName,
-      userGender: userGender,
-      umrahStarted: umrahStartTime ? fmtDateTime(umrahStartTime) : 'N/A',
-      totalDuration: sinceStart(),
-      totalPausedTime: fmtDuration(totalPausedMs),
-      deviceInfo: navigator.userAgent.slice(0,100),
-      logs: activityLog
-    };
-    const res = await fetch(GOOGLE_SCRIPT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify(payload)
-    });
-    const data = await res.json();
-    if (data.status === 'success') {
-      syncEl.className = 'sync-status synced';
-      syncEl.textContent = '✅ Synced to Google Sheets';
-      haptic(100);
-    } else {
-      throw new Error(data.message);
-    }
-  } catch(e) {
-    syncEl.className = 'sync-status error';
-    syncEl.textContent = '❌ Sync failed';
-    console.error('Cloud sync error:', e);
-  }
-  setTimeout(() => syncEl.style.display = 'none', 4000);
-}
-
-// ============================================================
-// SHARE APP
-// ============================================================
-window.shareApp = function() {
-  haptic(50);
-  const shareUrl = window.location.href.split('#')[0]; // Clean URL
-  
-  if (navigator.share) {
-    navigator.share({
-      title: 'دليل العمرة | Umrah Guide',
-      text: 'Check out this free, offline Umrah Guide app! دليل العمرة الشامل يعمل بدون إنترنت:',
-      url: shareUrl
-    }).catch(e => console.log('Share canceled'));
-  } else {
-    // Fallback if browser doesn't support native sharing (copies link)
-    const textArea = document.createElement("textarea");
-    textArea.value = shareUrl;
-    document.body.appendChild(textArea);
-    textArea.select();
-    try {
-      document.execCommand('copy');
-      const syncEl = document.getElementById('syncStatus');
-      syncEl.className = 'sync-status synced';
-      syncEl.textContent = currentLang === 'en' ? '✅ Link copied to clipboard!' : '✅ تم نسخ الرابط!';
-      syncEl.style.display = 'block';
-      setTimeout(() => syncEl.style.display = 'none', 3000);
-    } catch (err) {
-      console.error('Copy failed', err);
-    }
-    document.body.removeChild(textArea);
-  }
+const DAY_INFO={
+8:{ar:'يوم التروية',en:'Day of Tarwiyah',loc:'منى',ico:'🕌'},
+9:{ar:'يوم عرفة',en:'Day of Arafat',loc:'عرفة ← مزدلفة',ico:'☀️'},
+10:{ar:'يوم النحر — العيد',en:'Day of Sacrifice (Eid)',loc:'منى ← مكة',ico:'🎉'},
+11:{ar:'أول أيام التشريق',en:'1st Day of Tashriq',loc:'منى',ico:'🪨'},
+12:{ar:'ثاني أيام التشريق',en:'2nd Day of Tashriq',loc:'منى',ico:'🪨'},
+13:{ar:'آخر أيام التشريق',en:'3rd Day of Tashriq',loc:'منى ← مكة',ico:'🚗'},
 };
-
-// ============================================================
-// RESET
-// ============================================================
-function confirmReset() {
-  if (confirm('⚠️ This will permanently delete all Umrah progress and logs.\n\nAre you sure?')) {
-    clearState();
-    location.reload();
-  }
+function renderDashboard(){
+const total=Object.keys(RITUALS).reduce((a,d)=>a+RITUALS[d].length,0);
+const done=Object.values(state.completedSteps).reduce((a,arr)=>a+arr.length,0);
+const pct=total>0?Math.round(done/total*100):0;
+document.getElementById('mainProg').style.width=pct+'%';
+document.getElementById('overallPct').textContent=pct+'% مكتمل';
+document.getElementById('stepsDone').textContent=done+' / '+total+' خطوة';
+const html=[8,9,10,11,12,13].map(d=>{
+const inf=DAY_INFO[d];
+const s=RITUALS[d].length,dn=(state.completedSteps[d]||[]).length;
+const isCur=d===state.currentDay,isDone=dn===s&&s>0,isLock=d>state.currentDay;
+const cls=isLock?'locked':(isCur?'cur':(isDone?'done':''));
+const st=isLock?'🔒':(isDone?'✅':(isCur?'▶️':'○'));
+return '<div class="dc '+cls+'" onclick="goToDay('+d+')">' +
+'<div class="dc-badge"><span class="db-dh">ذو الحجة</span><span class="db-n">'+d+'</span></div>'+
+'<div class="dc-info"><h3>'+inf.ico+' '+inf.ar+'</h3>'+
+'<p class="dc-en">'+inf.en+' — '+inf.loc+'</p>'+
+'<p>'+dn+'/'+s+' خطوات</p></div>'+
+'<div style="font-size:1rem">'+st+'</div></div>';
+}).join('');
+document.getElementById('dayCards').innerHTML=html;
 }
 
 // ============================================================
-// START UMRAH
+// RITUALS
 // ============================================================
-window.startUmrah = function() {
-  if (umrahStartTime) return;
-  // Show onboarding modal
-  document.getElementById('onboardOverlay').classList.add('show');
-  document.getElementById('obName').focus();
-};
-
-function applyStartedUI() {
-  const btn = document.getElementById('startBtn');
-  btn.classList.add('started');
-  btn.innerHTML = '<span>✅</span> <span class="lang-ar">بدأت العمرة</span> <span class="lang-en">Umrah Started</span>';
-  document.getElementById('umrahTimer').classList.add('active');
-  document.getElementById('startedAt').textContent = 'Started: '+fmtDateTime(umrahStartTime);
-  if (elapsedInterval) clearInterval(elapsedInterval);
-  elapsedInterval = setInterval(() => {
-    document.getElementById('elapsedTime').textContent = getActiveTime();
-  }, 1000);
+function renderRituals(day){
+const tabs=[8,9,10,11,12,13].map(d=>'<button class="dtab'+(d===day?' on':'')+'" onclick="switchDay('+d+')">'+DAY_INFO[d].ico+' '+d+'</button>').join('');
+document.getElementById('dayTabs').innerHTML=tabs;
+const steps=RITUALS[day]||[];
+const done=state.completedSteps[day]||[];
+const filtered=steps.filter(function(s,_i){
+if(s.gen==='men'&&state.gender!=='male')return false;
+if(s.gen==='women'&&state.gender!=='female')return false;
+if(s.types&&s.types!=='all'){
+const ok=s.types.split('+');
+if(!ok.includes(state.hajjType))return false;
 }
-
-// ============================================================
-// PROGRESS
-// ============================================================
-const dotsC = document.getElementById('progressDots');
-STEPS.forEach((_,i) => {
-  const dot = document.createElement('div');
-  dot.className = 'progress-dot';
-  dot.textContent = i+1;
-  dot.onclick = () => document.querySelectorAll('.step-card')[i].scrollIntoView({behavior:'smooth',block:'start'});
-  dotsC.appendChild(dot);
+return true;
 });
-
-function updateProgress() {
-  const pct = Math.round((completedSteps.size/STEPS.length)*100);
-  document.getElementById('progressFill').style.width = pct+'%';
-  document.getElementById('progressPercent').textContent = pct+'%';
-  document.querySelectorAll('.progress-dot').forEach((d,i) => d.classList.toggle('completed', completedSteps.has(i)));
-  const banner = document.getElementById('completedBanner');
-  
-  if (completedSteps.size === STEPS.length) {
-    banner.classList.add('show');
-    document.getElementById('totalDuration').textContent = '⏱️ Total: '+sinceStart();
-    if (elapsedInterval) { clearInterval(elapsedInterval); elapsedInterval=null; }
-    
-    releaseWakeLock(); // Release lock since Umrah is finished
-
-    // Auto-sync on completion
-    if (GOOGLE_SCRIPT_URL) setTimeout(syncToCloud, 1000);
-  } else {
-    banner.classList.remove('show');
-  }
-  saveState();
+const html=filtered.map(function(s,i){
+const isDone=done.includes(i),isInfo=s.typ==='info';
+const icon=isDone?'✓':(isInfo?'ℹ':'');
+const b=[];
+if(s.typ==='rukn')b.push('<span class="bdg rukn">ركن</span>');
+if(s.typ==='wajib')b.push('<span class="bdg wajib">واجب</span>');
+if(s.typ==='sunnah')b.push('<span class="bdg sunnah">سنة</span>');
+if(s.typ==='info')b.push('<span class="bdg info">تنبيه</span>');
+if(s.gen==='women')b.push('<span class="bdg women">للنساء</span>');
+if(s.gen==='men')b.push('<span class="bdg men">للرجال</span>');
+return '<div class="step'+(isDone?' done':'')+(isInfo?' info-step':'')+'" onclick="'+(isInfo?'':'toggleStep('+day+','+i+')')+'">'
++'<div class="s-chk">'+icon+'</div>'
++'<div class="s-body">'
++'<div class="s-ar">'+s.ar+'</div>'
++'<div class="s-en">'+s.en+'</div>'
++(s.note?'<div class="s-note">📌 '+s.note+'</div>':'')
++'<div class="badges">'+b.join('')+'</div>'
++'</div></div>';
+}).join('');
+document.getElementById('ritualSteps').innerHTML=html||'<div class="notice">لا توجد خطوات مخصصة لهذا اليوم بناءً على نوع حجك.</div>';
 }
-
-// ============================================================
-// LANGUAGE AND ACCESSIBILITY (Document Lang Tag)
-// ============================================================
-window.setLang = function(lang, btn) {
-  currentLang = lang;
-  
-  // Highlight active button
-  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
-  else document.querySelectorAll('.lang-btn').forEach(b => { 
-      if (b.textContent.includes(lang==='both'?'ثنائي':lang==='ar'?'عربي':'EN')) b.classList.add('active'); 
-  });
-  
-  // Hide/show classes
-  document.querySelectorAll('.lang-en').forEach(el => el.style.display = (lang==='ar')?'none':'');
-  document.querySelectorAll('.lang-ar').forEach(el => el.style.display = (lang==='en')?'none':'');
-  
-  // ACCESSIBILITY FIX: Update actual HTML lang and dir attributes for Screen Readers
-  document.documentElement.lang = lang === 'en' ? 'en' : 'ar';
-  document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
-
-  saveState();
-};
+function toggleStep(day,idx){
+haptic(45);
+const arr=state.completedSteps[day]||[];
+const pos=arr.indexOf(idx);
+if(pos>=0)arr.splice(pos,1);
+else{arr.push(idx);addLog('✅ يوم '+day+': '+(RITUALS[day][idx]&&RITUALS[day][idx].ar?RITUALS[day][idx].ar.substring(0,30):''));}
+state.completedSteps[day]=arr;
+save();renderRituals(day);renderDashboard();
+}
+function switchDay(d){renderRituals(d);}
+function goToDay(d){if(d>state.currentDay)return;switchPage('rituals');renderRituals(d);}
 
 // ============================================================
 // COUNTERS
 // ============================================================
-window.changeCount = function(id, delta, max) {
-  const prev = counters[id];
-  counters[id] = Math.max(0, Math.min(max, counters[id]+delta));
-  if (counters[id]===prev) return;
-  haptic(50); // HAPTIC FEEDBACK
-  
-  // Update visually
-  document.getElementById(`count-${id}`).textContent = counters[id];
-  document.getElementById(`countLabel-${id}`).textContent = counters[id];
-  document.getElementById(`rounds-${id}`).querySelectorAll('.round-dot').forEach((d,i) => d.classList.toggle('filled', i<counters[id]));
-  
-  const t = now();
-  const label = id==='tawaf'?'Tawaf':"Sa'i";
-  if (delta > 0) {
-    const prevTime = counterLogs[id].length>0 ? counterLogs[id][counterLogs[id].length-1].time : umrahStartTime;
-    const lapDur = prevTime ? fmtDuration(t-prevTime) : '--';
-    counterLogs[id].push({round:counters[id],time:t,lapDur});
-    addLog('round','round',`${label} — Round ${counters[id]}/${max} (lap: ${lapDur})`);
-    renderRoundLog(id);
-  }
-  saveState();
-};
-
-window.resetCount = function(id) {
-  counters[id]=0; counterLogs[id]=[];
-  document.getElementById(`count-${id}`).textContent=0;
-  document.getElementById(`countLabel-${id}`).textContent=0;
-  document.getElementById(`rounds-${id}`).querySelectorAll('.round-dot').forEach(d => d.classList.remove('filled'));
-  renderRoundLog(id);
-  haptic(100);
-  saveState();
-};
-
-function renderRoundLog(id) {
-  const c = document.getElementById(`roundlog-${id}`);
-  if (!c) return;
-  c.innerHTML='';
-  counterLogs[id].forEach(l => {
-    const div = document.createElement('div');
-    div.className='round-log-item';
-    div.innerHTML=`<span class="rnd-num">Round ${l.round}</span><span class="rnd-time">${fmtTime(l.time)}</span><span class="rnd-dur">${l.lapDur}</span>`;
-    c.appendChild(div);
-  });
-}
-
-// ============================================================
-// RENDER STEPS
-// ============================================================
-const stepsContainer = document.getElementById('stepsContainer');
-STEPS.forEach((step,idx) => {
-  const card = document.createElement('div');
-  card.className = 'step-card';
-  const header = document.createElement('div');
-  header.className='step-header';
-  header.innerHTML=`<div class="step-number">${idx+1}</div><div class="step-title-wrap"><div class="step-title lang-ar">${step.title}</div><div class="step-title-en lang-en">${step.titleEn}</div><div class="step-subtitle lang-ar">${step.subtitle}</div><div class="step-subtitle-en lang-en">${step.subtitleEn}</div></div><div class="step-toggle" aria-hidden="true">▼</div>`;
-  header.onclick = () => card.classList.toggle('open');
-  const body = document.createElement('div');
-  body.className='step-body';
-  const content = document.createElement('div');
-  content.className='step-content';
-
-  step.sections.forEach(sec => {
-    // Gender filtering: add data-gender attribute if section has gender tag
-    const genderAttr = sec.gender ? ` data-gender="${sec.gender}"` : '';
-
-    if (sec.type==='text') {
-      const b=document.createElement('div'); b.className='section-block';
-      if (sec.gender) b.dataset.gender = sec.gender;
-      const gTag = sec.gender === 'male' ? '<span class="gender-tag men-only">MEN</span>' : sec.gender === 'female' ? '<span class="gender-tag women-only">WOMEN</span>' : '';
-      b.innerHTML=`<div class="section-title lang-ar"><span class="icon">${sec.icon||''}</span> ${gTag}${sec.title}</div>${sec.titleEn?`<div class="section-title-en lang-en">${sec.icon||''} ${gTag}${sec.titleEn}</div>`:''}<div class="text-block lang-ar">${sec.content}</div>${sec.contentEn?`<div class="text-block-en lang-en">${sec.contentEn}</div>`:''}`;
-      content.appendChild(b);
-    } else if (sec.type==='dua'||sec.type==='quran') {
-      const b=document.createElement('div'); b.className=sec.type==='quran'?'quran-box':'dua-box';
-      if (sec.gender) b.dataset.gender = sec.gender;
-      const icon=sec.type==='quran'?'📖':'🤲';
-      b.innerHTML=`${sec.label?`<div class="dua-label lang-ar">${icon} ${sec.label}</div>`:''}${sec.labelEn?`<div class="dua-label-en lang-en">${icon} ${sec.labelEn}</div>`:''}<div class="dua-arabic" dir="rtl">${sec.arabic.replace(/\n/g,'<br>')}</div>${sec.translation?`<div class="dua-separator"></div><div class="dua-translation lang-ar">${sec.translation}</div>`:''}${sec.translationEn?`<div class="dua-translation-en lang-en">${sec.translationEn}</div>`:''}`;
-      content.appendChild(b);
-    } else if (sec.type==='note') {
-      const b=document.createElement('div'); b.className='note-box';
-      if (sec.gender) b.dataset.gender = sec.gender;
-      b.innerHTML=`<div class="lang-ar">💡 ${sec.content}</div>${sec.contentEn?`<div class="note-en lang-en">💡 ${sec.contentEn}</div>`:''}`;
-      content.appendChild(b);
-    } else if (sec.type==='warn') {
-      const b=document.createElement('div'); b.className='warn-box';
-      if (sec.gender) b.dataset.gender = sec.gender;
-      b.innerHTML=`<div class="lang-ar">${sec.content}</div>${sec.contentEn?`<div class="warn-en lang-en">${sec.contentEn}</div>`:''}`;
-      content.appendChild(b);
-    } else if (sec.type==='checklist') {
-      const b=document.createElement('div'); b.className='section-block';
-      b.innerHTML=`<div class="section-title lang-ar"><span class="icon">${sec.icon||''}</span> ${sec.title}</div>${sec.titleEn?`<div class="section-title-en lang-en">${sec.icon||''} ${sec.titleEn}</div>`:''}`;
-      sec.items.forEach((item,ci) => {
-        const el=document.createElement('div'); el.className='check-item';
-        const isObj=typeof item==='object';
-        const checkId=`check-${idx}-${ci}`;
-        if (isObj && item.gender) el.dataset.gender = item.gender;
-        const gTag = isObj && item.gender === 'male' ? '<span class="gender-tag men-only">MEN</span> ' : isObj && item.gender === 'female' ? '<span class="gender-tag women-only">WOMEN</span> ' : '';
-        el.innerHTML=`<div class="check-box"></div><div style="flex:1"><div class="check-text lang-ar">${gTag}${isObj?item.ar:item}</div>${isObj&&item.en?`<span class="check-text-en lang-en">${gTag}${item.en}</span>`:''}<div class="timestamp-badge" id="ts-${checkId}"></div></div>`;
-        el.onclick = () => {
-          haptic(30);
-          const was=el.classList.contains('checked');
-          el.classList.toggle('checked');
-          const ts=document.getElementById(`ts-${checkId}`);
-          if (!was) {
-            const t=now();
-            ts.textContent='✓ '+fmtTime(t)+' | +'+sinceStart();
-            ts.classList.add('visible');
-            checkedItems[checkId]={ time: t.toISOString(), text: fmtTime(t)+' | +'+sinceStart() };
-            addLog('check','check',(isObj?item.en:item));
-          } else {
-            ts.classList.remove('visible');
-            delete checkedItems[checkId];
-            saveState();
-          }
-        };
-        b.appendChild(el);
-      });
-      content.appendChild(b);
-    } else if (sec.type==='counter') {
-      const w=document.createElement('div'); w.className='counter-wrap';
-      w.innerHTML=`<div class="counter-title lang-ar">${sec.title}</div><div class="counter-title-en lang-en">${sec.titleEn}</div><div class="counter-display" id="count-${sec.id}" aria-live="polite">0</div><div class="counter-label"><span id="countLabel-${sec.id}">0</span> / ${sec.max} <span class="lang-ar">${sec.label}</span><span class="lang-en">${sec.labelEn}</span></div><div class="counter-rounds" id="rounds-${sec.id}">${'<div class="round-dot"></div>'.repeat(sec.max)}</div><div class="counter-buttons"><button class="counter-btn" aria-label="Increase ${sec.titleEn}" onclick="changeCount('${sec.id}',1,${sec.max})">+</button><button class="counter-btn" aria-label="Decrease" onclick="changeCount('${sec.id}',-1,${sec.max})">−</button><button class="counter-btn reset" onclick="resetCount('${sec.id}')">Reset</button></div><div class="round-log" id="roundlog-${sec.id}"></div>`;
-      content.appendChild(w);
-    }
-  });
-
-  const btn=document.createElement('button'); btn.className='complete-btn'; btn.dataset.idx=idx;
-  btn.innerHTML='<span class="lang-ar">تم الانتهاء من هذه الخطوة ✓</span> <span class="lang-en">Mark as Complete ✓</span>';
-  btn.onclick = () => {
-    haptic(80);
-    if (completedSteps.has(idx)) {
-      completedSteps.delete(idx);
-      btn.innerHTML='<span class="lang-ar">تم الانتهاء من هذه الخطوة ✓</span> <span class="lang-en">Mark as Complete ✓</span>';
-      btn.classList.remove('done');
-    } else {
-      completedSteps.add(idx);
-      btn.innerHTML='<span class="lang-ar">✓ تم بحمد الله</span> <span class="lang-en">✓ Completed</span>';
-      btn.classList.add('done');
-      addLog('step','complete',`Step ${idx+1}: ${step.titleEn}`);
-    }
-    setLang(currentLang);
-    updateProgress();
-  };
-  content.appendChild(btn);
-  body.appendChild(content);
-  card.appendChild(header);
-  card.appendChild(body);
-  stepsContainer.appendChild(card);
-  setTimeout(() => card.classList.add('visible'), 120*(idx+1));
+function renderCounters(){
+const showQ=(state.hajjType==='ifrad'||state.hajjType==='qiran');
+var html='<div class="ctr-section"><div class="ctr-head">الطواف — Tawaf</div>';
+if(showQ)html+=tawafHtml('tawafQudum','طواف القدوم','سنة — للإفراد والقران عند الوصول','Sunnah — Ifrad & Qiran on arrival',7);
+html+=tawafHtml('tawafIfadah','طواف الإفاضة','ركن — واجب على الجميع','Obligatory Pillar — for all pilgrims',7);
+html+=tawafHtml('tawafWada','طواف الوداع','واجب — قبل مغادرة مكة','Wajib — before leaving Makkah',7);
+html+='</div>';
+html+='<div class="ctr-section"><div class="ctr-head">السعي — Sa\'i</div>';
+html+=tawafHtml('sai','السعي بين الصفا والمروة','٧ أشواط — صفا ↔ مروة','7 legs — Safa to Marwa and back',7,true);
+html+='</div>';
+const pb=state.counters.pebbles;
+html+='<div class="ctr-section"><div class="ctr-head">جمع الحصى — Pebble Collection</div>';
+html+='<div class="pebble-box">'
++'<div class="pb-big">'+pb+'</div>'
++'<div class="pb-of">من 70 حصاة • Minimum required: 49</div>'
++'<div class="pb-bar-bg"><div class="pb-bar" style="width:'+Math.min(100,Math.round(pb/70*100))+'%"></div></div>'
++'<div style="font-size:.72rem;color:var(--cream-d);margin-bottom:10px">'
++(pb<49?'⚠️ تحتاج '+(49-pb)+' حصاة على الأقل | Need '+(49-pb)+' more':pb<70?'✅ حد أدنى مكتمل | '+(70-pb)+' more to reach 70':'✅ اكتملت الحصيات | All pebbles collected')
++'</div>'
++'<div class="pb-btns">'
++'<button class="btn-pb" onclick="addPb(1)">+ حصاة</button>'
++'<button class="btn-pb" onclick="addPb(7)">+ ٧</button>'
++'<button class="btn-pb neg" onclick="addPb(-1)">−</button>'
++'<button class="btn-pb neg" onclick="resetPb()">↺</button>'
++'</div></div></div>';
+html+='<div class="ctr-section"><div class="ctr-head">رمي الجمرات — Jamarat</div>';
+html+='<div class="jam-day-sec"><div class="jam-day-title">يوم ١٠ — Day 10: جمرة العقبة الكبرى فقط × ٧</div>'
++'<div class="jam-row">'
++'<div class="jam-col disabled"><div class="jcn s">الصغرى</div><div class="jcount">—</div></div>'
++'<div class="jam-col disabled"><div class="jcn w">الوسطى</div><div class="jcount">—</div></div>'
++jamaraHtml(10,'kubra','k','الكبرى')+'</div></div>';
+[11,12,13].forEach(function(d){
+html+='<div class="jam-day-sec"><div class="jam-day-title">يوم '+d+(d===13?' (اختياري / Optional)':'')+'</div>'
++'<div class="jam-row">'+jamaraHtml(d,'sughra','s','الصغرى')+jamaraHtml(d,'wusta','w','الوسطى')+jamaraHtml(d,'kubra','k','الكبرى')+'</div></div>';
 });
-
-document.querySelectorAll('.step-card')[0].classList.add('open');
-
-// ============================================================
-// RESTORE / FRESH START
-// ============================================================
-function restoreState() {
-  const saved = loadState();
-  if (!saved) return;
-
-  // Restore user info
-  userName = saved.userName || '';
-  userGender = saved.userGender || '';
-  if (userGender) {
-    document.body.classList.add('user-' + userGender);
-    document.getElementById('ubName').textContent = userName;
-    document.getElementById('ubIcon').textContent = userGender === 'male' ? '🧔' : '🧕';
-    document.getElementById('userBadge').classList.add('show');
-    applyGenderFilter();
-  }
-
-  // Restore pause state
-  totalPausedMs = saved.totalPausedMs || 0;
-  isPaused = saved.isPaused || false;
-  if (saved.pauseStartTime) pauseStartTime = new Date(saved.pauseStartTime);
-
-  // Restore completed steps
-  completedSteps = new Set(saved.completedSteps || []);
-  document.querySelectorAll('.complete-btn').forEach(btn => {
-    const idx = parseInt(btn.dataset.idx);
-    if (completedSteps.has(idx)) {
-      btn.innerHTML='<span class="lang-ar">✓ تم بحمد الله</span> <span class="lang-en">✓ Completed</span>';
-      btn.classList.add('done');
-    }
-  });
-
-  // Restore counters
-  counters = saved.counters || { tawaf:0, saei:0 };
-  ['tawaf','saei'].forEach(id => {
-    document.getElementById(`count-${id}`).textContent = counters[id];
-    document.getElementById(`countLabel-${id}`).textContent = counters[id];
-    document.getElementById(`rounds-${id}`).querySelectorAll('.round-dot').forEach((d,i) => d.classList.toggle('filled', i<counters[id]));
-    if (saved.counterLogs && saved.counterLogs[id]) {
-      counterLogs[id] = saved.counterLogs[id].map(l => ({ ...l, time: new Date(l.time) }));
-      renderRoundLog(id);
-    }
-  });
-
-  // Restore start time
-  if (saved.umrahStartTime) {
-    umrahStartTime = new Date(saved.umrahStartTime);
-    applyStartedUI();
-    
-    // Resume Wake Lock if app was restored while running
-    if (!isPaused) requestWakeLock();
-
-    // If was paused, show paused UI
-    if (isPaused) {
-      document.getElementById('pauseBtnText').textContent = '▶ Resume | استئناف';
-      document.getElementById('pauseBtn').classList.add('paused');
-      document.getElementById('pausedLabel').classList.add('show');
-      if (elapsedInterval) { clearInterval(elapsedInterval); elapsedInterval = null; }
-    }
-  }
-
-  // Restore activity log
-  activityLog = saved.activityLog || [];
-  renderLog();
-
-  // Restore checked items
-  checkedItems = saved.checkedItems || {};
-  Object.keys(checkedItems).forEach(checkId => {
-    const el = document.getElementById(`ts-${checkId}`);
-    if (el) {
-      el.textContent = '✓ ' + checkedItems[checkId].text;
-      el.classList.add('visible');
-      el.closest('.check-item')?.classList.add('checked');
-    }
-  });
-
-  // Restore language
-  if (saved.currentLang) setLang(saved.currentLang);
-
-  updateProgress();
-  document.getElementById('restoreBanner').classList.remove('show');
+html+='</div>';
+document.getElementById('countersContent').innerHTML=html;
 }
+function tawafHtml(key,name,subAr,subEn,total,isSai){
+const c=state.counters[key];
+const r=c.rounds,done=r>=total;
+var dots='';
+for(var i=0;i<total;i++){
+var cl=i<r?'done':(i===r&&!done?'cur':'');
+dots+='<div class="rdot '+cl+'" onclick="doRound(\''+key+'\','+total+')">'+(i+1)+'</div>';
+}
+const lapTxt=c.lapTimes.length?'آخر شوط: '+c.lapTimes[c.lapTimes.length-1]+'ث | Last lap: '+c.lapTimes[c.lapTimes.length-1]+'s':(isSai?'Safa → Marwa × 7':'Click to record each round');
+return '<div class="tawaf-box">'
++'<div class="tb-top"><div><div class="tb-name">'+name+'</div><div class="tb-sub-ar">'+subAr+'</div><div class="tb-sub-en">'+subEn+'</div></div>'
++'<div class="tb-badge">'+r+'/'+total+'</div></div>'
++'<div class="rounds-row">'+dots+'</div>'
++'<div class="tb-btns">'
++'<button class="btn-lap '+(done?'done-all':'')+'" onclick="doRound(\''+key+'\','+total+')">'
++(done?'✅ مكتمل — Completed':(isSai?'Leg '+(r+1):'Round '+(r+1)+' ✓'))+'</button>'
++'<button class="btn-rst" onclick="resetCtr(\''+key+'\')">↺</button></div>'
++'<div class="lap-info">'+lapTxt+'</div>'
++(done?'<div class="tawaf-done show">'+(key==='tawafWada'?'🕋 طواف الوداع — Farewell Tawaf Complete':key==='tawafIfadah'?'🎉 طواف الإفاضة مكتمل':'✅ مكتمل')+'</div>':'')
++'</div>';
+}
+function jamaraHtml(day,key,cls,name){
+const count=(state.counters.jamarat[day]&&state.counters.jamarat[day][key])||0,done=count>=7;
+var dots='';
+for(var i=0;i<7;i++)dots+='<div class="pd '+(i<count?'hit':'')+'"></div>';
+return '<div class="jam-col '+(done?'complete':'')+'">'
++'<div class="jcn '+cls+'">'+name+'</div>'
++'<div class="jcount">'+count+'</div>'
++'<div class="pdots">'+dots+'</div>'
++'<button class="jam-btn '+(done?'done':'')+'" onclick="throwPebble('+day+',\''+key+'\')">'+(done?'✅':'🪨')+'</button>'
++'</div>';
+}
+function doRound(key,total){
+haptic(50);
+const c=state.counters[key];
+if(c.rounds>=total)return;
+const now=Date.now();
+if(c.lapStart)c.lapTimes.push(Math.round((now-c.lapStart)/1000));
+c.lapStart=now;c.rounds++;
+if(c.rounds===total){haptic(120);addLog('✅ '+{tawafQudum:'طواف القدوم',tawafIfadah:'طواف الإفاضة',tawafWada:'طواف الوداع',sai:'السعي'}[key]+' مكتمل');}
+save();renderCounters();
+}
+function resetCtr(key){state.counters[key]={rounds:0,lapTimes:[],lapStart:null};save();renderCounters();}
+function throwPebble(day,col){
+haptic(40);
+const j=state.counters.jamarat[day];if(!j)return;
+if((j[col]||0)>=7)return;
+j[col]=(j[col]||0)+1;
+if(j[col]===7){haptic(100);addLog('🪨 رمي يوم '+day+' - '+{sughra:'الصغرى',wusta:'الوسطى',kubra:'الكبرى'}[col]+' مكتملة');}
+save();renderCounters();
+}
+function addPb(n){haptic(30);state.counters.pebbles=Math.max(0,Math.min(99,state.counters.pebbles+n));save();renderCounters();}
+function resetPb(){state.counters.pebbles=0;save();renderCounters();}
 
-function freshStart() {
-  clearState();
-  document.getElementById('restoreBanner').classList.remove('show');
+// ============================================================
+// DUAS
+// ============================================================
+function renderDuas(){
+var html='';
+DUAS.forEach(function(cat){
+html+='<div class="dua-cat"><div class="dua-cat-hd"><span class="dua-cat-title">'+cat.cat+'</span><div class="dua-cat-line"></div></div>';
+cat.items.forEach(function(d,i){
+var uid='dua-'+cat.cat+'-'+i;
+html+='<div class="dua-item" id="'+uid+'" onclick="toggleAccordion(\''+uid+'\')">'
++'<div class="dua-hd"><h4>'+d.title+'</h4><span class="dtog">▾</span></div>'
++'<div class="dua-body">'
++'<div class="dua-ar">'+d.ar.replace(/\n/g,'<br>')+'</div>'
++'<div class="dua-en">'+d.en.replace(/\n/g,'<br>')+'</div>'
++(d.occ?'<div class="dua-occ">📍 '+d.occ+'</div>':'')
++'<button class="dua-copy" onclick="copyText(event,this,\''+encodeURIComponent(d.ar)+'\')">📋 نسخ</button>'
++'</div></div>';
+});
+html+='</div>';
+});
+document.getElementById('duasContent').innerHTML=html;
 }
 
 // ============================================================
-// INIT — Check for saved state
+// LEARN
 // ============================================================
-(function init() {
-  const saved = loadState();
-  if (saved && saved.umrahStartTime) {
-    const startDate = new Date(saved.umrahStartTime);
-    const name = saved.userName ? saved.userName + ' — ' : '';
-    const info = `${name}Started: ${fmtDateTime(startDate)} | ${(saved.activityLog||[]).length} log entries | ${(saved.completedSteps||[]).length}/${STEPS.length} steps`;
-    document.getElementById('restoreInfo').textContent = info;
-    document.getElementById('restoreBanner').classList.add('show');
-  }
-  updateProgress();
-})();
+function renderLearn(){
+var html='';
+LEARN.forEach(function(l,i){
+var uid='learn-'+i;
+html+='<div class="learn-item" id="'+uid+'" onclick="toggleAccordion(\''+uid+'\')">'
++'<div class="learn-hd"><span class="learn-ico">'+l.ico+'</span>'
++'<div class="learn-hd-txt"><h3>'+l.title+'</h3><p>'+l.sub+'</p></div>'
++'<span class="learn-tog">▾</span></div>'
++'<div class="learn-body">'+l.body+'</div>'
++'</div>';
+});
+document.getElementById('learnContent').innerHTML=html;
+}
 
 // ============================================================
-// SERVICE WORKER REGISTRATION
+// FAQ
 // ============================================================
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js')
-      .then(reg => console.log('[PWA] Service Worker registered:', reg.scope))
-      .catch(err => console.log('[PWA] SW registration failed (normal in dev):', err));
-  });
+var activeFaqCat='all';
+function renderFaq(){
+const cats=[...new Set(FAQ.map(function(f){return f.cat;}))];
+var chips='<button class="fc on" onclick="setFaqCat(this,\'all\')">الكل</button>';
+cats.forEach(function(c){chips+='<button class="fc" onclick="setFaqCat(this,\''+c+'\')">'+c+'</button>';});
+document.getElementById('faqFilter').innerHTML=chips;
+var html='';
+FAQ.forEach(function(f,i){
+var uid='faq-'+i;
+html+='<div class="faq-item" id="'+uid+'" data-cat="'+f.cat+'" onclick="toggleAccordion(\''+uid+'\')">'
++'<div class="faq-q"><span class="faq-qn">'+(i+1)+'</span><span class="faq-qt">'+f.q+'</span><span class="faq-qi">▾</span></div>'
++'<div class="faq-a"><p>'+f.a+'</p>'+(f.madhab?'<div class="madhab">🏛 '+f.madhab+'</div>':'')+'</div>'
++'</div>';
+});
+document.getElementById('faqContent').innerHTML=html;
 }
+function setFaqCat(btn,cat){
+document.querySelectorAll('.fc').forEach(function(b){b.classList.remove('on');});
+btn.classList.add('on');activeFaqCat=cat;filterFaq();
+}
+function filterFaq(){
+const q=(document.getElementById('faqSearch').value||'').trim().toLowerCase();
+document.querySelectorAll('.faq-item').forEach(function(el){
+const ok=(activeFaqCat==='all'||el.dataset.cat===activeFaqCat)&&(!q||el.textContent.toLowerCase().includes(q));
+el.classList.toggle('faq-hidden',!ok);
+});
+}
+
+// ============================================================
+// SHARED ACCORDION
+// ============================================================
+function toggleAccordion(uid){
+const el=document.getElementById(uid);
+if(el)el.classList.toggle('open');
+}
+function copyText(e,btn,enc){
+e.stopPropagation();
+try{navigator.clipboard.writeText(decodeURIComponent(enc)).then(function(){btn.textContent='✅ تم';setTimeout(function(){btn.textContent='📋 نسخ';},2000);});}catch(err){}
+}
+
+// ============================================================
+// ABOUT & SHARE
+// ============================================================
+function sayAmeen(btn) {
+  haptic(80);
+  btn.textContent = 'جزاك الله خيراً وتقبل منك 🤍';
+  btn.style.background = 'var(--green-l)';
+  btn.style.color = '#fff';
+  btn.style.boxShadow = 'none';
+  btn.disabled = true;
+}
+
+function shareApp(e, btn) {
+  haptic(30);
+  const shareData = {
+    title: 'دليل الحج الشامل',
+    text: 'رفيقك الشامل لأداء مناسك الحج خطوة بخطوة. يعمل بدون إنترنت وبخصوصية تامة. أسألكم الدعاء.',
+    url: window.location.href
+  };
+  
+  if (navigator.share) {
+    navigator.share(shareData).catch((err) => console.log('Share failed', err));
+  } else {
+    // Fallback to copy link if Web Share API is not supported
+    e.stopPropagation();
+    try{
+      navigator.clipboard.writeText(window.location.href).then(function(){
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '✅ تم نسخ الرابط';
+        setTimeout(function(){btn.innerHTML = originalText;}, 2500);
+      });
+    } catch(err){}
+  }
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function switchPage(page){
+state.currentPage=page;
+document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');});
+document.querySelectorAll('.ni').forEach(function(n){n.classList.remove('on');});
+var pg=document.getElementById('pg-'+page);
+if(pg)pg.classList.add('on');
+var ni=document.querySelector('.ni[data-page="'+page+'"]');
+if(ni)ni.classList.add('on');
+
+// Turn on Wake Lock for reading-heavy / action-heavy tabs
+if(page === 'counters' || page === 'duas') requestWakeLock();
+else releaseWakeLock();
+
+if(page==='dashboard')renderDashboard();
+else if(page==='rituals')renderRituals(state.currentDay);
+else if(page==='counters')renderCounters();
+else if(page==='duas')renderDuas();
+else if(page==='learn')renderLearn();
+else if(page==='faq'){renderFaq();activeFaqCat='all';}
+}
+
+// ============================================================
+// ONBOARDING & RESET
+// ============================================================
+var _g='male',_d=8;
+function selectType(card){
+document.querySelectorAll('.type-card').forEach(function(c){c.classList.remove('selected');});
+card.classList.add('selected');
+document.getElementById('selectedType').value=card.dataset.v;
+}
+function initGroups(){
+document.querySelectorAll('#genderGroup .rb').forEach(function(btn){
+btn.onclick=function(){
+document.querySelectorAll('#genderGroup .rb').forEach(function(b){b.classList.remove('on');});
+btn.classList.add('on');_g=btn.dataset.v;
+};
+});
+document.querySelectorAll('#dayGroup .rb').forEach(function(btn){
+btn.onclick=function(){
+document.querySelectorAll('#dayGroup .rb').forEach(function(b){b.classList.remove('on');});
+btn.classList.add('on');_d=parseInt(btn.dataset.v);
+};
+});
+}
+function startApp(){
+const name=document.getElementById('pName').value.trim();
+if(!name){document.getElementById('pName').focus();return;}
+state.name=name;state.gender=_g;
+state.hajjType=document.getElementById('selectedType').value||'tamattu';
+state.currentDay=_d;state.sessionStart=Date.now();save();
+document.getElementById('onboarding').classList.add('hidden');
+updateHeader();renderDashboard();
+addLog('🕋 بدأ '+name+' — '+{tamattu:'تمتع',ifrad:'إفراد',qiran:'قران'}[state.hajjType]);
+}
+function editProfile(){
+document.getElementById('pName').value=state.name;
+document.querySelectorAll('#genderGroup .rb').forEach(function(b){b.classList.toggle('on',b.dataset.v===state.gender);});
+document.querySelectorAll('#dayGroup .rb').forEach(function(b){b.classList.toggle('on',b.dataset.v==state.currentDay);});
+document.querySelectorAll('.type-card').forEach(function(c){c.classList.toggle('selected',c.dataset.v===state.hajjType);});
+document.getElementById('selectedType').value=state.hajjType;
+_g=state.gender;_d=state.currentDay;
+document.getElementById('onboarding').classList.remove('hidden');
+}
+
+// Better confirmation logic (No alerts/prompts)
+let resetTimer = null;
+function confirmReset(btn){
+    if(btn.dataset.confirm === 'yes') {
+        localStorage.removeItem('hajj_v5');
+        localStorage.removeItem('hajj_v4');
+        location.reload();
+    } else {
+        btn.dataset.confirm = 'yes';
+        const originalText = btn.textContent;
+        btn.textContent = 'تأكيد الإعادة؟';
+        btn.style.color = 'white';
+        btn.style.background = 'var(--red)';
+        
+        clearTimeout(resetTimer);
+        resetTimer = setTimeout(() => {
+            btn.dataset.confirm = 'no';
+            btn.textContent = originalText;
+            btn.style.color = 'var(--red)';
+            btn.style.background = 'none';
+        }, 3000);
+    }
+}
+
+// ============================================================
+// TIMER + INIT
+// ============================================================
+function tick(){
+if(!state.sessionStart)return;
+const e=Math.floor((Date.now()-state.sessionStart)/1000);
+const hh=String(Math.floor(e/3600)).padStart(2,'0');
+const mm=String(Math.floor((e%3600)/60)).padStart(2,'0');
+const ss=String(e%60).padStart(2,'0');
+const el=document.getElementById('sessionTimer');
+if(el)el.textContent=hh+':'+mm+':'+ss;
+}
+document.addEventListener('DOMContentLoaded',function(){
+initGroups();
+if(load()&&state.name){
+  document.getElementById('onboarding').classList.add('hidden');
+  applyTheme();
+  document.documentElement.style.setProperty('--f-scale', state.fontScale);
+  updateHeader();
+  renderDashboard();
+}
+document.querySelectorAll('.ni').forEach(function(btn){
+  btn.addEventListener('click',function(){switchPage(btn.dataset.page);});
+});
+setInterval(tick,1000);
+});
 </script>
 </body>
 </html>
+  
