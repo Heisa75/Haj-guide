@@ -40,6 +40,8 @@ body.light .pb-bar-bg { background: rgba(0,0,0,.08); }
 body.light .fg input[type=text] { background: #FFFFFF; color: var(--cream); }
 body.light .faq-search input { background: #FFFFFF; color: var(--cream); }
 body.light .notice { background: #FAF5E8; }
+body.light .s-en, body.light .dc-info .dc-en, body.light .tb-sub-en,
+body.light .learn-hd-txt p, body.light .dua-en { color: #4A554E; }
 
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow-x:hidden;background:var(--bg);color:var(--cream);
@@ -158,7 +160,7 @@ flex-shrink:0;line-height:1.1;background:rgba(196,152,64,.08)}
 .dc-info{flex:1}
 .dc-info h3{font-size:.9rem;color:var(--cream)}
 .dc-info p{font-size:.74rem;color:var(--cream-d);margin-top:1px}
-.dc-info .dc-en{font-size:.68rem;color:rgba(242,232,208,.45);font-family:'Cormorant Garamond',serif;font-style:italic}
+.dc-info .dc-en{font-size:.68rem;color:rgba(242,232,208,.68);font-family:'Cormorant Garamond',serif;font-style:italic}
 
 /* RITUALS */
 .day-tabs{display:flex;gap:5px;overflow-x:auto;padding-bottom:3px;margin-bottom:14px;scrollbar-width:none}
@@ -180,7 +182,7 @@ font-size:.75rem;transition:all .2s;margin-top:2px}
 .step.info-step .s-chk{background:rgba(196,152,64,.15);border-color:var(--gold);color:var(--gold)}
 .s-body{flex:1}
 .s-ar{font-size:calc(.92rem * var(--f-scale));color:var(--cream);line-height:1.5;transition:font-size 0.2s}
-.s-en{font-size:calc(.74rem * var(--f-scale));color:rgba(242,232,208,.65);font-family:'Cormorant Garamond',serif;
+.s-en{font-size:calc(.78rem * var(--f-scale));color:rgba(242,232,208,.78);font-family:'Cormorant Garamond',serif;
 font-style:italic;margin-top:3px;direction:ltr;text-align:left;line-height:1.4;transition:font-size 0.2s}
 .s-note{font-size:.72rem;color:var(--gold);margin-top:3px}
 .badges{display:flex;gap:4px;margin-top:5px;flex-wrap:wrap}
@@ -201,7 +203,7 @@ font-weight:600;text-transform:uppercase;margin-bottom:9px;display:flex;align-it
 .tb-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
 .tb-name{font-family:'Scheherazade New',serif;font-size:1rem;color:var(--cream)}
 .tb-sub-ar{font-size:.72rem;color:var(--cream-d);margin-top:2px}
-.tb-sub-en{font-size:.68rem;color:rgba(242,232,208,.5);font-family:'Cormorant Garamond',serif;
+.tb-sub-en{font-size:.68rem;color:rgba(242,232,208,.7);font-family:'Cormorant Garamond',serif;
 font-style:italic;margin-top:1px;direction:ltr;text-align:left}
 .tb-badge{font-size:.7rem;color:var(--gold);background:var(--gold-d);padding:3px 9px;
 border-radius:8px;border:1px solid var(--cb);white-space:nowrap}
@@ -809,8 +811,20 @@ document.addEventListener('visibilitychange', () => {
 // ============================================================
 // HIJRI DATE
 // ============================================================
+function umAlQuraParts(d){
+try{
+const p=new Intl.DateTimeFormat('en-u-ca-islamic-umalqura-nu-latn',{day:'numeric',month:'numeric',year:'numeric'}).formatToParts(d);
+const g=t=>parseInt((p.find(x=>x.type===t)||{}).value,10);
+const r={y:g('year'),m:g('month'),d:g('day')};
+if(r.y>1400&&r.m>=1&&r.m<=12&&r.d>=1&&r.d<=30)return r;
+}catch(e){}
+return null;
+}
 function hijriDate(d){
 d=d||new Date();
+const mArU=['محرم','صفر','ربيع الأول','ربيع الثاني','جمادى الأولى','جمادى الثانية','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
+const u=umAlQuraParts(d);
+if(u)return{y:u.y,m:u.m,d:u.d,mAr:mArU[u.m-1]};
 const Y=d.getFullYear(),M=d.getMonth()+1,D=d.getDate();
 let a=Math.floor((14-M)/12),y=Y+4800-a,m=M+12*a-3;
 let jd=D+Math.floor((153*m+2)/5)+365*y+Math.floor(y/4)-Math.floor(y/100)+Math.floor(y/400)-32045;
@@ -821,6 +835,11 @@ l-=(Math.floor((30-j)/15))*(Math.floor((17719*j)/50))+(Math.floor(j/16))*(Math.f
 const hm=Math.floor((24*l)/709),hd=l-Math.floor((709*hm)/24),hy=30*n+j-30;
 const mAr=['محرم','صفر','ربيع الأول','ربيع الثاني','جمادى الأولى','جمادى الثانية','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
 return{y:hy,m:hm,d:hd,mAr:mAr[hm-1]||''};
+}
+// During 8-13 Dhul-Hijjah, move the pilgrim to today's day automatically (never backwards)
+function syncHajjDay(){
+const h=hijriDate();
+if(h.m===12&&h.d>=8&&h.d<=13&&h.d>(state.currentDay||8)){state.currentDay=h.d;save();}
 }
 function updateHeader(){
 const h=hijriDate();
@@ -1238,6 +1257,7 @@ if(load()&&state.name){
   document.getElementById('onboarding').classList.add('hidden');
   applyTheme();
   document.documentElement.style.setProperty('--f-scale', state.fontScale);
+  syncHajjDay();
   updateHeader();
   renderDashboard();
 }

@@ -1,6 +1,6 @@
 // Hajj Guide service worker
 // Bump CACHE_VERSION whenever index.html or other assets change.
-const CACHE_VERSION = 'hajj-app-v2-2026-10-13';
+const CACHE_VERSION = 'hajj-app-v3-2026-10-14';
 const CORE = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', event => {
