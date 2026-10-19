@@ -741,6 +741,23 @@ const state={
 };
 
 function save(){try{localStorage.setItem('hajj_v5',JSON.stringify(state));}catch(e){}}
+// Completed steps used to be stored as positions in the filtered list the
+// pilgrim saw, which moved whenever the profile changed. They are indices
+// into RITUALS now; convert what was saved under the current profile.
+function migrateStepIndices(){
+if(state.stepIdx===2)return;
+const out={};
+Object.keys(state.completedSteps||{}).forEach(function(day){
+const vis=visibleSteps(day);
+out[day]=(state.completedSteps[day]||[])
+  .map(function(pos){ return vis[pos] ? vis[pos].idx : null; })
+  .filter(function(x){ return x!==null; });
+});
+state.completedSteps=out;
+state.stepIdx=2;
+save();
+}
+
 function load(){
   try{
     const d=JSON.parse(localStorage.getItem('hajj_v5')) || JSON.parse(localStorage.getItem('hajj_v4'));
@@ -748,6 +765,7 @@ function load(){
       Object.assign(state,d);
       if(!state.theme) state.theme='dark';
       if(!state.fontScale) state.fontScale=1;
+      migrateStepIndices();
       return true;
     }
   }catch(e){}
@@ -803,8 +821,11 @@ function releaseWakeLock() {
   }
 }
 document.addEventListener('visibilitychange', () => {
-  if (wakeLock !== null && document.visibilityState === 'visible') {
-    requestWakeLock();
+  if (document.visibilityState === 'visible') {
+    if (wakeLock !== null) requestWakeLock();
+    // A backgrounded app that is reopened after maghrib or after midnight
+    // must land on the right day of Hajj.
+    try { syncHajjDay(); updateHeader(); } catch (e) {}
   }
 });
 
@@ -820,8 +841,34 @@ if(r.y>1400&&r.m>=1&&r.m<=12&&r.d>=1&&r.d<=30)return r;
 }catch(e){}
 return null;
 }
+// Sunset over Makkah as a UTC instant, by the standard sunrise equation.
+// Good to a few minutes, which is what a day boundary needs.
+const MAKKAH_LAT=21.4225, MAKKAH_LON=39.8262;
+function makkahSunset(d){
+const lw=-MAKKAH_LON;
+const days=Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate())/86400000-10957.5;
+const n=Math.ceil(days-0.0009-lw/360);
+const Js=n+0.0009+lw/360;
+const M=(357.5291+0.98560028*Js)%360, Mr=M*Math.PI/180;
+const C=1.9148*Math.sin(Mr)+0.0200*Math.sin(2*Mr)+0.0003*Math.sin(3*Mr);
+const L=(M+C+180+102.9372)%360, Lr=L*Math.PI/180;
+const Jt=2451545.0+Js+0.0053*Math.sin(Mr)-0.0069*Math.sin(2*Lr);
+const sinDec=Math.sin(Lr)*Math.sin(23.4397*Math.PI/180), cosDec=Math.cos(Math.asin(sinDec));
+const latR=MAKKAH_LAT*Math.PI/180;
+const cosW=(Math.sin(-0.833*Math.PI/180)-Math.sin(latR)*sinDec)/(Math.cos(latR)*cosDec);
+if(cosW>1||cosW<-1)return null;
+const w=Math.acos(cosW)*180/Math.PI;
+return ((Jt+w/360)-2440587.5)*86400000;
+}
+// The Hijri day begins at maghrib. Leaving Arafat on the evening of the 9th,
+// the pilgrim is already in the 10th, so the civil date is moved on once the
+// sun has set before the Hijri conversion.
 function hijriDate(d){
 d=d||new Date();
+try{
+  const set=makkahSunset(d);
+  if(set!==null&&d.getTime()>=set){ d=new Date(d.getTime()); d.setDate(d.getDate()+1); }
+}catch(e){}
 const mArU=['محرم','صفر','ربيع الأول','ربيع الثاني','جمادى الأولى','جمادى الثانية','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
 const u=umAlQuraParts(d);
 if(u)return{y:u.y,m:u.m,d:u.d,mAr:mArU[u.m-1]};
@@ -863,8 +910,12 @@ const DAY_INFO={
 13:{ar:'آخر أيام التشريق',en:'3rd Day of Tashriq',loc:'منى ← مكة',ico:'🚗'},
 };
 function renderDashboard(){
-const total=Object.keys(RITUALS).reduce((a,d)=>a+RITUALS[d].length,0);
-const done=Object.values(state.completedSteps).reduce((a,arr)=>a+arr.length,0);
+// Only the steps this pilgrim performs count, or 100% is unreachable.
+const total=Object.keys(RITUALS).reduce((a,d)=>a+visibleSteps(d).length,0);
+const done=Object.keys(RITUALS).reduce(function(a,d){
+const vis=visibleSteps(d).map(function(e){return e.idx;});
+return a+(state.completedSteps[d]||[]).filter(function(i){return vis.includes(i);}).length;
+},0);
 const pct=total>0?Math.round(done/total*100):0;
 document.getElementById('mainProg').style.width=pct+'%';
 document.getElementById('overallPct').textContent=pct+'% مكتمل';
@@ -888,12 +939,9 @@ document.getElementById('dayCards').innerHTML=html;
 // ============================================================
 // RITUALS
 // ============================================================
-function renderRituals(day){
-const tabs=[8,9,10,11,12,13].map(d=>'<button class="dtab'+(d===day?' on':'')+'" onclick="switchDay('+d+')">'+DAY_INFO[d].ico+' '+d+'</button>').join('');
-document.getElementById('dayTabs').innerHTML=tabs;
-const steps=RITUALS[day]||[];
-const done=state.completedSteps[day]||[];
-const filtered=steps.filter(function(s,_i){
+// Steps this pilgrim performs, each paired with its index in RITUALS so the
+// stored progress does not move when the profile changes.
+function stepApplies(s){
 if(s.gen==='men'&&state.gender!=='male')return false;
 if(s.gen==='women'&&state.gender!=='female')return false;
 if(s.types&&s.types!=='all'){
@@ -901,9 +949,19 @@ const ok=s.types.split('+');
 if(!ok.includes(state.hajjType))return false;
 }
 return true;
-});
-const html=filtered.map(function(s,i){
-const isDone=done.includes(i),isInfo=s.typ==='info';
+}
+function visibleSteps(day){
+return (RITUALS[day]||[]).map(function(step,idx){return {step:step,idx:idx};})
+  .filter(function(e){return stepApplies(e.step);});
+}
+function renderRituals(day){
+const tabs=[8,9,10,11,12,13].map(d=>'<button class="dtab'+(d===day?' on':'')+'" onclick="switchDay('+d+')">'+DAY_INFO[d].ico+' '+d+'</button>').join('');
+document.getElementById('dayTabs').innerHTML=tabs;
+const steps=RITUALS[day]||[];
+const done=state.completedSteps[day]||[];
+const filtered=visibleSteps(day);
+const html=filtered.map(function(e){
+const s=e.step,i=e.idx,isDone=done.includes(i),isInfo=s.typ==='info';
 const icon=isDone?'✓':(isInfo?'ℹ':'');
 const b=[];
 if(s.typ==='rukn')b.push('<span class="bdg rukn">ركن</span>');
@@ -1088,6 +1146,8 @@ html+='<div class="faq-item" id="'+uid+'" data-cat="'+f.cat+'" onclick="toggleAc
 +'</div>';
 });
 document.getElementById('faqContent').innerHTML=html;
+// the list was just rebuilt unfiltered; re-apply whatever is in the box
+filterFaq();
 }
 function setFaqCat(btn,cat){
 document.querySelectorAll('.fc').forEach(function(b){b.classList.remove('on');});
@@ -1242,7 +1302,11 @@ function confirmReset(btn){
 // ============================================================
 // TIMER + INIT
 // ============================================================
+let lastDayCheck=0;
 function tick(){
+// once a minute, in case the app is left open across maghrib
+if(Date.now()-lastDayCheck>60000){ lastDayCheck=Date.now();
+  try{ syncHajjDay(); updateHeader(); }catch(e){} }
 if(!state.sessionStart)return;
 const e=Math.floor((Date.now()-state.sessionStart)/1000);
 const hh=String(Math.floor(e/3600)).padStart(2,'0');
